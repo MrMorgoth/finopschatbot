@@ -1,7 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 from langchain_community.document_loaders import WebBaseLoader
-from bs4 import BeautifulSoup4
+import bs4
 import getpass
 import os
 from langchain_text_splitters import RecursiveCharacterTextSplitter
