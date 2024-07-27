@@ -1,15 +1,14 @@
 import streamlit as st
 from openai import OpenAI
-import langchain
 from langchain_community.document_loaders import WebBaseLoader
-import bs4
+from bs4 import BeautifulSoup4
 import getpass
 import os
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-import langchain_community
-import langchain_chroma
+from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI
-import langchainhub
+from langchain_openai import OpenAIEmbeddings
+from langchain import hub
 
 model="gpt-3.5-turbo"
 
