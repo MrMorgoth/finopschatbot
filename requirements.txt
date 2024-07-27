@@ -1,5 +1,8 @@
 streamlit
 openai
+Chroma
+chromadb
+chroma-hnswlib
 langchain==0.2.11
 langchain-chroma==0.1.2
 langchain-community==0.2.10
