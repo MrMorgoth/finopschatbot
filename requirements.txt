@@ -5,6 +5,7 @@ langchain==0.2.11
 langchain-community
 chromadb
 chroma-hnswlib
+langchain-chroma
 langchain-core==0.2.24
 langchain-openai==0.1.19
 langchain-text-splitters==0.2.2
