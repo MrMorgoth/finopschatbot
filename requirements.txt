@@ -6,9 +6,8 @@ langchain-community==0.2.10
 langchain-core==0.2.24
 langchain-openai==0.1.19
 langchain-text-splitters==0.2.2
-langchainhub==0.1.20
+langchainhub
 langdetect==1.0.9
 langsmith==0.1.93
-langchainhub==0.1.14
 bs4
 
