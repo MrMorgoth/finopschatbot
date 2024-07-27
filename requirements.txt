@@ -6,4 +6,4 @@ langchain-core==0.1.35
 langchain-openai==0.0.8
 langchain-text-splitters==0.0.1
 langchainhub==0.1.14
-
+beautifulsoup4==4.12.3
