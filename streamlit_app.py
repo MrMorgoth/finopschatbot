@@ -1,6 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 import langchain
+from langchain import hub
 from langchain_community.document_loaders import WebBaseLoader
 import bs4
 import getpass
@@ -9,7 +10,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 #from langchain_openai import ChatOpenAI
 from langchain_openai import OpenAIEmbeddings
-from langchain import hub
 
 model="gpt-3.5-turbo"
 
