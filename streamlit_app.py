@@ -1,23 +1,60 @@
 import streamlit as st
 from openai import OpenAI
+import langchain
+from langchain_community.document_loaders import WebBaseLoader
+import bs4
+import getpass
+import os
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+import langchain_community
+import langchain_chroma
+from langchain_openai import ChatOpenAI
+import langchainhub
+
+model="gpt-3.5-turbo"
 
 # Show title and description.
 st.title("💬 FinOps Chatbot")
 st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model combined with FinOps specific RAG to generate responses. "
+    "This is a simple chatbot that uses OpenAI's GPT-3.5 model combined with FinOps specific content retrieved to generate more accurate responses. "
 )
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-#openai_api_key = st.text_input("OpenAI API Key", type="password")
+# Initiate OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-#if not openai_api_key:
-#    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-#else:
 
-# Create an OpenAI client.
-#client = OpenAI(api_key=openai_api_key)
+
+# Add a URL Loader so we can load data from FinOps Foundation, Kubernetes and Cloud Provider documentation sites.
+loader = WebBaseLoader(
+    web_paths=("https://www.finops.org/framework/principles/",),
+    bs_kwargs=dict(
+        parse_only=bs4.SoupStrainer(
+            class_=("post-content", "post-title", "post-header")
+        )
+    ),
+)
+docs = loader.load()
+
+# Split the loaded content into chunks, then store the embeddings
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+splits = text_splitter.split_documents(docs)
+vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
+
+# Retrieve and generate using relevant content from source websites
+retriever = vectorstore.as_retriever()
+prompt = hub.pull("rlm/rag-prompt")
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+rag_chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | prompt
+    | model
+    | StrOutputParser()
+)
+rag_chain.invoke("What is Task Decomposition?")
+
+
 
 # Create a session state variable to store the chat messages. This ensures that the
 # messages persist across reruns.
@@ -40,7 +77,6 @@ if prompt := st.chat_input("What is up?"):
 
     # Generate a response using the OpenAI API.
     stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
         messages=[
             {"role": m["role"], "content": m["content"]}
             for m in st.session_state.messages
