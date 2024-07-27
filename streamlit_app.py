@@ -1,7 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 import langchain
-from langchain import hub
+import langchainhub
 from langchain_community.document_loaders import WebBaseLoader
 import bs4
 import getpass
