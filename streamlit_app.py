@@ -1,16 +1,7 @@
 import streamlit as st
 from openai import OpenAI
-import langchain
-import langchainhub
-import langchain_core
-from langchain_community.document_loaders import WebBaseLoader
-import bs4
-import getpass
 import os
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_chroma.vectorstores import Chroma
-#from langchain_openai import ChatOpenAI
-from langchain_openai import OpenAIEmbeddings
+
 
 model="gpt-3.5-turbo"
 
@@ -22,40 +13,6 @@ st.write(
 
 # Initiate OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-
-
-# Add a URL Loader so we can load data from FinOps Foundation, Kubernetes and Cloud Provider documentation sites.
-loader = WebBaseLoader(
-    web_paths=("https://www.finops.org/framework/principles/",),
-    bs_kwargs=dict(
-        parse_only=bs4.SoupStrainer(
-            class_=("post-content", "post-title", "post-header")
-        )
-    ),
-)
-docs = loader.load()
-
-# Split the loaded content into chunks, then store the embeddings
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-splits = text_splitter.split_documents(docs)
-vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
-
-# Retrieve and generate using relevant content from source websites
-retriever = vectorstore.as_retriever()
-prompt = hub.pull("rlm/rag-prompt")
-
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
-
-rag_chain = (
-    {"context": retriever | format_docs, "question": RunnablePassthrough()}
-    | prompt
-    | model
-    | StrOutputParser()
-)
-rag_chain.invoke("What is Task Decomposition?")
-
-
 
 # Create a session state variable to store the chat messages. This ensures that the
 # messages persist across reruns.
