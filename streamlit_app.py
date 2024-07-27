@@ -2,12 +2,12 @@ import streamlit as st
 from openai import OpenAI
 import langchain
 import langchainhub
+import langchain_core
 from langchain_community.document_loaders import WebBaseLoader
 import bs4
 import getpass
 import os
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-import langchain_core
 from langchain_community.vectorstores import Chroma
 #from langchain_openai import ChatOpenAI
 from langchain_openai import OpenAIEmbeddings
