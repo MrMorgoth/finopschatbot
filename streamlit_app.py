@@ -8,7 +8,7 @@ import bs4
 import getpass
 import os
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-import langchain_chroma
+from langchain_chroma.vectorstores import Chroma
 #from langchain_openai import ChatOpenAI
 from langchain_openai import OpenAIEmbeddings
 
