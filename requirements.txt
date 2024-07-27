@@ -1,12 +1,12 @@
 streamlit
 openai
 langchain
-Chroma
-chromadb
-chroma-hnswlib
 langchain==0.2.11
 langchain-community==0.2.10
 langchain-chroma
+Chroma
+chromadb
+chroma-hnswlib
 langchain-core==0.2.24
 langchain-openai==0.1.19
 langchain-text-splitters==0.2.2
