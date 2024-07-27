@@ -1,5 +1,6 @@
 streamlit
 openai
+langchain
 Chroma
 chromadb
 chroma-hnswlib
