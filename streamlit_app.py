@@ -16,6 +16,7 @@ with st.sidebar:
     st.button("Kubernetes Cost")
     st.button("Cost Avoidance")
     st.button("Rate Reduction")
+    st.button("Leaderboard")
 
 # Initiate OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
