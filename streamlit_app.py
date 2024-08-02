@@ -12,11 +12,10 @@ st.write(
     "This is a simple chatbot that uses OpenAI's GPT-3.5 model combined with FinOps specific content retrieved to generate more accurate responses. "
 )
 with st.sidebar:
-    st.write("This code will be printed to the sidebar.")
     st.button("Cost Overview")
-    with st.spinner("Loading..."):
-        time.sleep(5)
-    st.success("Done!")
+    st.button("Kubernetes Cost")
+    st.button("Cost Avoidance")
+    st.button("Rate Reduction")
 
 # Initiate OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
