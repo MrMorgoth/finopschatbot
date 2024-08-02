@@ -12,8 +12,7 @@ st.write(
     "This is a simple chatbot that uses OpenAI's GPT-3.5 model combined with FinOps specific content retrieved to generate more accurate responses. "
 )
 with st.sidebar:
-    with st.echo():
-        st.write("This code will be printed to the sidebar.")
+    st.write("This code will be printed to the sidebar.")
 
     with st.spinner("Loading..."):
         time.sleep(5)
