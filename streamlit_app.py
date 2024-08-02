@@ -13,7 +13,7 @@ st.write(
 )
 with st.sidebar:
     st.write("This code will be printed to the sidebar.")
-
+    st.button("Cost Overview")
     with st.spinner("Loading..."):
         time.sleep(5)
     st.success("Done!")
