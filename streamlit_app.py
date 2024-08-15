@@ -9,7 +9,7 @@ import time
 # Show title and description.
 st.title("💬 FinOps Chatbot")
 st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model combined with FinOps specific content retrieved to generate more accurate responses. "
+    "This is a simple chatbot that uses Generative AI combined with FinOps specific content retrieved to generate more accurate responses. "
 )
 with st.sidebar:
     st.button("Cost Overview")
