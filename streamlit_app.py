@@ -10,7 +10,7 @@ from langchain_community.vectorstores import FAISS
 
 # Initiate OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-openai_api_key = st.secrets["OPENAI_API_KEY"]
+API = st.secrets["OPENAI_API_KEY"]
 
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
@@ -27,7 +27,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         # Create retriever interface
         retriever = vectorstore.as_retriever()
         # Create QA chain
-        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
+        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=API), chain_type='stuff', retriever=retriever)
         return qa.run(query_text)
     
 
@@ -47,13 +47,12 @@ query_text = st.text_input('Enter your question:', placeholder = 'Please provide
 # Form input and query
 result = []
 with st.form('myform', clear_on_submit=True):
-    openai_api_key = openai_api_key
+    openai_api_key = API
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
-    if submitted and openai_api_key.startswith('sk-'):
+    if submitted:
         with st.spinner('Calculating...'):
             response = generate_response(uploaded_file, openai_api_key, query_text)
             result.append(response)
-            del openai_api_key
 
 if len(result):
     st.info(response)
