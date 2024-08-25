@@ -28,7 +28,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         return qa.run(query_text)
     
 # File upload
-uploaded_file = st.file_uploader('Upload an article', type='txt')
+uploaded_file = st.file_uploader('Upload an article', type='pdf')
 
 
 # Show title and description.
