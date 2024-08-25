@@ -24,7 +24,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         vectorstore = FAISS.from_documents(documents=texts,
                                    embedding=OpenAIEmbeddings())
         # Create retriever interface
-        vectorstore.as_retriever()
+        retriever = vectorstore.as_retriever()
         # Create QA chain
         qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
         return qa.run(query_text)
