@@ -37,7 +37,7 @@ st.write(
 )
 
 # File upload
-uploaded_file = st.file_uploader('Upload an article', type='pdf')
+uploaded_file = st.file_uploader('Upload an article', type='txt')
 # Query text
 query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
 
