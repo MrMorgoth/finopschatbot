@@ -34,40 +34,24 @@ uploaded_file = st.file_uploader('Upload an article', type='pdf')
 # Show title and description.
 st.title("💬 FinOps Chatbot")
 st.write(
-    "This is a simple chatbot that uses Generative AI combined with FinOps specific content retrieved to generate more accurate responses. "
+    "This is a simple chatbot that uses Generative AI combined with FinOps specific content to generate more accurate responses. "
 )
 
-# Create a session state variable to store the chat messages. This ensures that the
-# messages persist across reruns.
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# File upload
+uploaded_file = st.file_uploader('Upload an article', type='txt')
+# Query text
+query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
 
-# Display the existing chat messages via `st.chat_message`.
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+# Form input and query
+result = []
+with st.form('myform', clear_on_submit=True):
+    openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
+    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
+    if submitted and openai_api_key.startswith('sk-'):
+        with st.spinner('Calculating...'):
+            response = generate_response(uploaded_file, openai_api_key, query_text)
+            result.append(response)
+            del openai_api_key
 
-# Create a chat input field to allow the user to enter a message. This will display
-# automatically at the bottom of the page.
-if prompt := st.chat_input("What's up?"):
-
-    # Store and display the current prompt.
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    # Generate a response using the OpenAI API.
-    stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state.messages
-        ],
-        stream=True,
-    )
-
-    # Stream the response to the chat using `st.write_stream`, then store it in 
-    # session state.
-    with st.chat_message("assistant"):
-        response = st.write_stream(stream)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+if len(result):
+    st.info(response)
