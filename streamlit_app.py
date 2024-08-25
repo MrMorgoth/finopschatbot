@@ -2,6 +2,10 @@ import streamlit as st
 from openai import OpenAI
 import os
 import time
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chains import RetrievalQA
 
 
 
@@ -11,13 +15,14 @@ st.title("💬 FinOps Chatbot")
 st.write(
     "This is a simple chatbot that uses Generative AI combined with FinOps specific content retrieved to generate more accurate responses. "
 )
+"""
 with st.sidebar:
     st.button("Cost Overview")
     st.button("Kubernetes Cost")
     st.button("Cost Avoidance")
     st.button("Rate Reduction")
     st.button("Leaderboard")
-
+"""
 # Initiate OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
@@ -33,7 +38,7 @@ for message in st.session_state.messages:
 
 # Create a chat input field to allow the user to enter a message. This will display
 # automatically at the bottom of the page.
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("What's up?"):
 
     # Store and display the current prompt.
     st.session_state.messages.append({"role": "user", "content": prompt})
