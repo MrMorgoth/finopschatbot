@@ -18,7 +18,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 
-prompt = hub.pull("rlm/rag-prompt")
+prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
@@ -42,8 +42,8 @@ def generate_response(uploaded_file, query_text):
         llm = ChatOpenAI(api_key=openai_api_key)
         # Create QA chain
         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
-        rag_chain = create_retrieval_chain(retriever, combine_docs_chain)
-        return rag_chain.invoke({"input": "What are finops personas?"})
+        rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
+        rag_chain.invoke({"input": "What are finops personas?"})
         #qa_chain = create_retrieval_chain(
         #    llm, retriever, prompt=prompt
         #)
