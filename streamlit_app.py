@@ -24,7 +24,7 @@ prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 
 
 # All files and directories ending with .txt and that don't begin with a dot:
-files = os.listdir("context")
+files = os.listdir()
 st.info(files) 
 
 def list_response(query_text):
