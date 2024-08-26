@@ -30,7 +30,8 @@ for file in search:
 
 
 def list_response(query_text):
-    documents = ["context/personas.txt".read().decode()]
+    context_file = os.path("context/personas.txt")
+    documents = [context_file.read().decode()]
     #for doc in txt_files:
     #    output = doc.read().decode()
     #    documents.append(output)
