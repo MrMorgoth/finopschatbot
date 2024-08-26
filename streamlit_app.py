@@ -10,9 +10,12 @@ from langchain_community.vectorstores import FAISS
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+from langchain import hub
 
 # Initiate OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
+
+prompt = hub.pull("rlm/rag-prompt")
 
 def generate_response(uploaded_file, query_text):
     # Load document if file is uploaded
@@ -32,17 +35,11 @@ def generate_response(uploaded_file, query_text):
         # LLM
         llm = ChatOpenAI()
         # Create QA chain
-        qa_chain = (
-            {
-            "context": vectorstore.as_retriever(),
-            "question": RunnablePassthrough(),
-            }
-            | query_text
-            | llm
-            | StrOutputParser()
+        qa_chain = RetrievalQA.from_llm(
+            llm, retriever, prompt=prompt
         )
         #qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-        return qa_chain.invoke(query_text)
+        return qa_chain(query_text)
     
     
 # Show title and description.
