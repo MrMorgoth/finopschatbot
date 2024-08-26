@@ -15,6 +15,7 @@ from langchain import hub
 # Initiate OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
+
 prompt = hub.pull("rlm/rag-prompt")
 
 def generate_response(uploaded_file, query_text):
