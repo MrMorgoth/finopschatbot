@@ -36,7 +36,7 @@ def generate_response(uploaded_file, query_text):
         # Create retriever interface
         retriever = vectorstore.as_retriever()
         # LLM
-        llm = ChatOpenAI()
+        llm = ChatOpenAI(api_key=openai_api_key)
         # Create QA chain
         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
         rag_chain = create_retrieval_chain(retriever, combine_docs_chain)
