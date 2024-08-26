@@ -44,7 +44,7 @@ def generate_response(uploaded_file, query_text):
         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
         rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
         output = rag_chain.invoke({"input": query_text})
-        return output
+        return output["answer"]
         #qa_chain = create_retrieval_chain(
         #    llm, retriever, prompt=prompt
         #)
