@@ -15,7 +15,7 @@ from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from llama_index.core import SummaryIndex
 from llama_index.readers.google import GoogleDriveReader
-from IPython.display import Markdown, display
+
 
 # Initiate OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
