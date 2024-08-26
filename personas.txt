@@ -1,0 +1,200 @@
+                                              This work is licensed under CC BY 4.0 - Read how use or adaptation requires attribution
+
+
+
+
+                                                                                                                                               Get Certified        Join the Community
+
+                                                                                                  About          Community               Certifications        Framework       Projects
+
+
+
+
+                                               Early Bird registration is available for FinOps X Europe 2024
+
+
+Framework                                                                                                                                                            Make suggestion
+Overview       Principles       Personas   Phases     Maturity       Domains         Capabilities
+
+
+
+
+FinOps Personas
+Framework Overview / FinOps Personas
+
+
+Implementing FinOps requires many stakeholders, or Personas,
+in an organization to work collaboratively with the FinOps team. It
+is not only the FinOps team who perform FinOps activities. All
+FinOps Personas involved in using, tracking, managing, or
+directing the use of cloud will benefit from working together using
+the FinOps Framework as an operating model.
+
+
+Personas represent broad stakeholder groups that must collaborate,
+not individual people. In a complex organization, a Persona may
+represent many people in various related roles, and in very small
+organizations, a single person may perform the duties of multiple
+Personas. Each has an important part to play in supporting FinOps.
+
+
+
+
+Core Personas
+Within most organizations, there are Core Personas who will always be
+involved in the practice of FinOps. These Core Personas provide all of the
+organizational disciplines to successfully use cloud effectively. Each Persona
+has a role to play in the organization as well as in the practice of FinOps, and
+each has perspectives, challenges, metrics and outcomes they seek that
+may be slightly different from other Personas.
+
+
+
+
+   FinOps Practitioner                                       Leadership                                                          Product
+
+   Bridge business, engineering, and finance                 Empowers organizational alignment to                                Drive business value by defining
+   teams by applying a working knowledge of                  prioritize FinOps initiatives, enables action                       requirements and prioritizing initiatives
+   the FinOps Framework in order to establish                to overcome FinOps challenges, and                                  that align FinOps to business objectives,
+   a FinOps culture and enable evidence-                     connects cloud technology decisions with                            engaging stakeholders, and articulating the
+   based decisions to maximize the business                  business objectives.                                                value-proposition of cloud technology
+   value of cloud.                                                                                                               decisions.
+                                                             FinOps Responsibilities include:
+
+   FinOps Responsibilities include:                              Strategic Planning Oversight                                    FinOps Responsibilities include:
+
+       Technical Proficiency                                     Decision-Making and Prioritization Authority                           Strategic Alignment
+      Analytical Skills                                      Stakeholder Engagement and Alignment                Stakeholder Engagement
+      Cost Management and Optimization                       Revenue Growth                                      Requirement Definition
+      Collaboration and Communication                        Compliance and Governance                           Value Delivery
+      FinOps Practice Continuous Improvement                                                                     Change Management
+      Problem-Solving
+      Change Management
+      FinOps Persona Collaboration
+
+
+
+
+   Engineering                                           Finance                                              Procurement
+
+   Responsible for designing, managing and               Provides financial expertise and works               Responsible for procuring cloud services,
+   optimizing cloud infrastructure to achieve            closely with FinOps Practitioners to                 optimizing vendor relationships, and
+   cost-effectiveness, performance, reliability          reconcile cloud provider invoices with               ensuring cost-effective and compliant
+   while ensuring the security and compliance            cloud billing data to accurately forecast,           vendor engagements, collaborating with
+   of cloud environments.                                budget and chargeback cloud costs.                   FinOps Practitioners to ensure rates
+                                                                                                              contribute to the successful management
+   FinOps Responsibilities include:                      FinOps Responsibilities include:
+                                                                                                              of cloud finances.
+      Cloud Infrastructure Management                        Financial Expertise
+      Application and Services Deployment                    Budgeting and Forecasting                        FinOps Responsibilities include:
+      Cost Management and Resource Optimization              Cost Allocation Analysis
+                                                                                                                 Vendor Risk Management
+      Monitoring and Alerting                                Financial Reporting
+                                                                                                                 Vendor Contract Management and Negotiation
+      Security and Compliance                                Compliance and Governance
+                                                                                                                 Negotiated Discount Management and Negotiation
+      Automation and Tooling
+                                                                                                                 Collaboration with IT and Operations
+      Architecting Sustainably for Cloud
+                                                                                                                 License Monitoring and Evaluation
+                                                                                                                 Compliance and Governance
+
+
+
+
+Allied Personas
+Organizations may have roles that are not directly involved in the practice of
+FinOps. These Allied Personas work within traditional or emerging
+disciplines – including Sustainability, ITAM, ITFM/TBM, Security, and
+ITSM/ITIL – and may need to coordinate with FinOps Practitioners. Their
+roles align with the "Intersecting Disciplines" Framework Capability which
+outlines where their activities intersect with FinOps.
+
+
+
+
+   ITSM / ITIL                                           ITAM                                                 Sustainability
+
+   IT Service Management is responsible for              IT Asset Management collaborates with                Sustainability collaborates with FinOps
+   collaborating with FinOps Practitioners to            FinOps Practitioners to achieve efficiency,          Practitioners to ensure cloud use optimizes
+   standardize and streamline IT service                 transparency, and value in managing IT               for environmental impact, drive
+   operations, improve service quality and               assets that impact cloud use, by leveraging          accountability, and accelerate progress
+   reliability, and ensure that IT services meet         the expertise and data from both                     towards broader sustainability goals in a
+   agreed-upon service levels and                        disciplines to optimize costs, ensure                way that is balanced against cloud cost
+   performance targets are balanced against              compliance, and support strategic business           management priorities.
+   cloud cost management priorities.                     objectives balanced against cloud cost
+                                                                                                              Responsibilities intersecting with FinOps include:
+                                                         management priorities.
+   Responsibilities intersecting with FinOps include:                                                            Optimization for Sustainable Initiatives
+
+      Service Design                                     Responsibilities intersecting with FinOps include:      Waste Reduction
+
+      Service Operation & Improvement                                                                            Policy and Compliance
+                                                             Asset Discovery and Inventory
+      Service Level Monitoring & Management                                                                      Efficiency and Optimization Analysis
+                                                             Asset Auditing and Compliance
+      Change Management                                                                                          Documentation and Reporting
+                                                             License Management
+         Cost Analysis and Optimization                                         Cost Analysis and Optimization                  Stakeholder Collaboration
+         Documentation and Reporting                                            Documentation and Reporting
+          Stakeholder Collaboration                                             Stakeholder Collaboration
+
+
+
+
+     Security                                                              ITFM
+
+     IT Security collaborates with FinOps                                  IT Financial Management is responsible for
+     Practitioners to leverage their FinOps                                collaborating with FinOps Practitioners to
+     expertise and insights to optimize cloud                              provide transparency into IT spending,
+     security spending, improve IT Security                                enable informed decision-making,
+     financial governance, and strengthen the                              ensuring cloud and traditional IT
+     organization's overall cloud security                                 investments are aligned with business
+     posture.                                                              priorities, cost-effective, and deliver
+                                                                           measurable value to the organization.
+     Responsibilities intersecting with FinOps include:
+
+         Monitoring and Anomaly Response                                   Responsibilities intersecting with FinOps include:
+
+         Anomaly Investigation and Analysis                                     Budgeting
+         Policy and Compliance                                                  Cost Accounting & Optimization
+         Identity and Access Management                                         Financial Analysis
+         Documentation and Reporting                                            Investment Prioritization
+         Stakeholder Collaboration                                              Financial Reporting
+                                                                                Continuous Process Improvements
+                                                                                Documentation and Reporting
+                                                                                Stakeholder Collaboration
+
+
+
+
+                                                                                                                                                 Follow Us:
+
+
+
+
+FinOps Foundation                 Resources                          Training and Certification
+
+
+About                             FinOps Assets                      Full Course Catalog
+
+Media Resources                   Events                             FinOps Certified
+
+Technical Charter                 O’Reilly FinOps Book               Practitioner
+
+Code of Conduct                                                      FinOps Certified
+                                                                     Professional
+
+                                                                     Member Certification
+
+
+
+
+This work is licensed under Attribution 4.0 International
+
+© 2024 FinOps Foundation Project a Series of LF Projects, LLC.
+
+For web site terms of use, trademark policy and other project policies please see https://lfprojects.org.
+
+For the technical charter of FinOps Project a Series of LF Projects, LLC, please see the Technical Charter.
+
