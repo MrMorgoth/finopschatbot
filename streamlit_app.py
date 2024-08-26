@@ -21,37 +21,6 @@ openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 
 prompt = hub.pull("langchain-ai/retrieval-qa-chat")
-
-txt_files = []
-# All files and directories ending with .txt and that don't begin with a dot:
-search = os.listdir("context")
-for file in search:
-    txt_files.append(file)
-
-
-def list_response(query_text):
-    context_file = open("context/personas.txt")
-    documents = [context_file.read().decode()]
-    #for doc in txt_files:
-    #    output = doc.read().decode()
-    #    documents.append(output)
-    # Split documents into chunks
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    texts = text_splitter.create_documents(documents)
-    # Select embeddings
-    embeddings = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
-    # Create a vectorstore from documents
-    vectorstore = FAISS.from_documents(documents=texts,
-                                   embedding=OpenAIEmbeddings())
-    # Create retriever interface
-    retriever = vectorstore.as_retriever()
-    # LLM
-    llm = ChatOpenAI(api_key=openai_api_key)
-    # Create QA chain
-    combine_docs_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
-    output = rag_chain.invoke({"input": query_text})
-    return output["answer"]
     
 
 def generate_response(uploaded_file, query_text):
@@ -93,7 +62,7 @@ result = []
 with st.form('myform', clear_on_submit=True):
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
     if submitted:  
-        response = list_response(query_text)
+        response = generate_response(uploaded_file, query_text)
         #response = generate_response(uploaded_file, query_text)
         result.append(response)
 
