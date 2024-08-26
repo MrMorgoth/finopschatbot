@@ -27,7 +27,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         # Create retriever interface
         retriever = vectorstore.as_retriever()
         # Create QA chain
-        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=API), chain_type='stuff', retriever=retriever)
+        qa = RetrievalQA.from_chain_type(llm=client, chain_type='stuff', retriever=retriever)
         return qa.run(query_text)
     
 
