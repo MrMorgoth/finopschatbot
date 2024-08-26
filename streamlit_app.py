@@ -13,6 +13,9 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain import hub
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+from llama_index.core import SummaryIndex
+from llama_index.readers.google import GoogleDriveReader
+from IPython.display import Markdown, display
 
 # Initiate OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
@@ -20,8 +23,19 @@ openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
+def gdrive_response(query_text):
+    # Replace the placeholder with your chosen folder ID
+    folder_id = ["1Oj7vw5Hka0r7Lt-1BcLYnBNVPC7m7qaq"]
+
+    # Make sure credentials.json file exists in the current directory (data_connectors)
+    documents = GoogleDriveReader().load_data(folder_id=folder_id)
+
+    index = SummaryIndex.from_documents(documents)
+
+    # Set Logging to DEBUG for more detailed outputs
+    query_engine = index.as_query_engine()
+    response = query_engine.query(query_text)
+    return response
 
 def generate_response(uploaded_file, query_text):
     # Load document if file is uploaded
@@ -53,6 +67,7 @@ st.write(
 
 # File upload
 uploaded_file = st.file_uploader('Upload a file', type='txt')
+
 # Query text
 query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
 
@@ -61,7 +76,8 @@ result = []
 with st.form('myform', clear_on_submit=True):
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
     if submitted:  
-        response = generate_response(uploaded_file, query_text)
+        response = gdrive_response(query_text)
+        #response = generate_response(uploaded_file, query_text)
         result.append(response)
 
 if len(result):
