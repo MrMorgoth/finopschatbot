@@ -53,6 +53,7 @@ st.write(
 
 # File upload
 uploaded_file = "personas.txt"
+print(uploaded_file)
 #st.file_uploader('Upload a file', type='txt')
 # Query text
 query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
