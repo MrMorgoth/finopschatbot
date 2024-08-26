@@ -25,7 +25,6 @@ def format_docs(docs):
 
 def generate_response(uploaded_file, query_text):
     # Load document if file is uploaded
-    
     if uploaded_file is not None:
         documents = [uploaded_file.read().decode()]
         # Split documents into chunks
@@ -45,12 +44,6 @@ def generate_response(uploaded_file, query_text):
         rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
         output = rag_chain.invoke({"input": query_text})
         return output["answer"]
-        #qa_chain = create_retrieval_chain(
-        #    llm, retriever, prompt=prompt
-        #)
-        #qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-        
-    
     
 # Show title and description.
 st.title("💬 FinOps Chatbot")
