@@ -20,6 +20,9 @@ openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 prompt = hub.pull("rlm/rag-prompt")
 
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
 def generate_response(uploaded_file, query_text):
     # Load document if file is uploaded
     
@@ -40,7 +43,7 @@ def generate_response(uploaded_file, query_text):
         # Create QA chain
         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
         rag_chain = create_retrieval_chain(retriever, combine_docs_chain)
-        return rag_chain.invoke(input=query_text)
+        return rag_chain.invoke({"input": "What are finops personas?"})
         #qa_chain = create_retrieval_chain(
         #    llm, retriever, prompt=prompt
         #)
