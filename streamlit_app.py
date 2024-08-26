@@ -39,8 +39,8 @@ def generate_response(uploaded_file, query_text):
         llm = ChatOpenAI()
         # Create QA chain
         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
-        rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
-        return rag_chain.invoke("what are the finops personas?")
+        rag_chain = create_retrieval_chain(retriever, combine_docs_chain)
+        return rag_chain.invoke({"input": "what are the finops personas?"})
         #qa_chain = create_retrieval_chain(
         #    llm, retriever, prompt=prompt
         #)
