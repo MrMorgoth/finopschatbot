@@ -43,7 +43,8 @@ def generate_response(uploaded_file, query_text):
         # Create QA chain
         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
         rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
-        rag_chain.invoke({"input": "What are finops personas?"})
+        output = rag_chain.invoke({"input": "What are finops personas?"})
+        return output
         #qa_chain = create_retrieval_chain(
         #    llm, retriever, prompt=prompt
         #)
