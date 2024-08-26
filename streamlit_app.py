@@ -48,6 +48,7 @@ query_text = st.text_input('Enter your question:', placeholder = 'Please provide
 result = []
 with st.form('myform', clear_on_submit=True):
     openai_api_key = st.secrets["OPENAI_API_KEY"]
+    print(openai_api_key)
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
     if submitted:
         with st.spinner('Calculating...'):
