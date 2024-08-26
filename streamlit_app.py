@@ -22,10 +22,12 @@ openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 
-
+txt_files = []
 # All files and directories ending with .txt and that don't begin with a dot:
-files = os.listdir("context")
-st.info(files) 
+search = os.listdir("context")
+for file in search:
+    txt_files.append(file)
+st.info(txt_files) 
 
 def list_response(query_text):
     documents = [uploaded_file.read().decode()]
