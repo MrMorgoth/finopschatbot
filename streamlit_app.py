@@ -14,7 +14,7 @@ API = st.secrets["OPENAI_API_KEY"]
 
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
-    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+    
     if uploaded_file is not None:
         documents = [uploaded_file.read().decode()]
         # Split documents into chunks
