@@ -29,7 +29,9 @@ for file in search:
     txt_files.append(file)
 
 def list_response(query_text):
-    documents = [txt_files.read().decode()]
+    for file in txt_files:
+        documents = [file.read().decode()]
+        return documents
     # Split documents into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.create_documents(documents)
