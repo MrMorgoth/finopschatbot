@@ -11,6 +11,8 @@ from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain import hub
+from langchain.chains.retrieval import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
 
 # Initiate OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
@@ -36,11 +38,14 @@ def generate_response(uploaded_file, query_text):
         # LLM
         llm = ChatOpenAI()
         # Create QA chain
-        qa_chain = RetrievalQA.from_llm(
-            llm, retriever, prompt=prompt
-        )
+        combine_docs_chain = create_stuff_documents_chain(llm, prompt)
+        rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
+        return rag_chain.invoke(query_text)
+        #qa_chain = create_retrieval_chain(
+        #    llm, retriever, prompt=prompt
+        #)
         #qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-        return qa_chain(query_text)
+        
     
     
 # Show title and description.
