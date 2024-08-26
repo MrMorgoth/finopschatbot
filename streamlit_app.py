@@ -40,7 +40,7 @@ def generate_response(uploaded_file, query_text):
         # Create QA chain
         combine_docs_chain = create_stuff_documents_chain(llm, prompt)
         rag_chain = create_retrieval_chain(retriever, combine_docs_chain)
-        return rag_chain.invoke({"input": "what are the finops personas?"})
+        return rag_chain.invoke(input=query_text)
         #qa_chain = create_retrieval_chain(
         #    llm, retriever, prompt=prompt
         #)
