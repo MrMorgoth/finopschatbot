@@ -7,6 +7,9 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain_community.vectorstores import FAISS
+from langchain_openai.chat_models import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 
 # Initiate OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
@@ -26,13 +29,23 @@ def generate_response(uploaded_file, query_text):
                                    embedding=OpenAIEmbeddings())
         # Create retriever interface
         retriever = vectorstore.as_retriever()
+        # LLM
+        llm = ChatOpenAI()
+
         # Create QA chain
-        qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-        return qa.run(query_text)
+        qa_chain = (
+        {
+            "context": vectorstore.as_retriever(),
+            "question": RunnablePassthrough(),
+        }
+            | query_text
+            | llm
+            | StrOutputParser()
+        )
+        #qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=openai_api_key), chain_type='stuff', retriever=retriever)
+        return qa_chain.invoke(query_text)
     
-
-
-
+    
 # Show title and description.
 st.title("💬 FinOps Chatbot")
 st.write(
