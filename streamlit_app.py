@@ -50,7 +50,7 @@ with st.form('myform', clear_on_submit=True):
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
     if submitted:
         with st.spinner('Calculating...'):
-            response = generate_response(uploaded_file, openai_api_key, query_text)
+            response = generate_response(uploaded_file, query_text)
             result.append(response)
 
 if len(result):
