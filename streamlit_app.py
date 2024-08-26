@@ -31,13 +31,12 @@ def generate_response(uploaded_file, query_text):
         retriever = vectorstore.as_retriever()
         # LLM
         llm = ChatOpenAI()
-
         # Create QA chain
         qa_chain = (
-        {
+            {
             "context": vectorstore.as_retriever(),
             "question": RunnablePassthrough(),
-        }
+            }
             | query_text
             | llm
             | StrOutputParser()
