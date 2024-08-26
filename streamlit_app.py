@@ -30,8 +30,10 @@ for file in search:
 
 
 def list_response(query_text):
+    documents = []
     for doc in txt_files:
-        documents = [doc.read().decode()]
+        output = doc.read().decode()
+        documents.append(output)
     # Split documents into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.create_documents(documents)
