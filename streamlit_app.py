@@ -24,7 +24,7 @@ prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 files = []
 
 # All files and directories ending with .txt and that don't begin with a dot:
-st.info(glob.glob("/Users/christianavery/finopschatbot/context/*.txt")) 
+st.info(os.listdir("./context")) 
 
 def list_response(query_text):
     documents = [uploaded_file.read().decode()]
