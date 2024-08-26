@@ -27,10 +27,9 @@ txt_files = []
 search = os.listdir("context")
 for file in search:
     txt_files.append(file)
-st.info(txt_files) 
 
 def list_response(query_text):
-    documents = [uploaded_file.read().decode()]
+    documents = [txt_files.read().decode()]
     # Split documents into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.create_documents(documents)
@@ -89,7 +88,7 @@ result = []
 with st.form('myform', clear_on_submit=True):
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
     if submitted:  
-        response = gdrive_response(query_text)
+        response = list_response(query_text)
         #response = generate_response(uploaded_file, query_text)
         result.append(response)
 
