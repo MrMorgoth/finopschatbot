@@ -42,4 +42,4 @@ with st.form('myform', clear_on_submit=True):
         result.append(response)
 
 if len(result):
-    st.info(response)
+    st.info("The optimal reservation amount is $",response)
