@@ -39,13 +39,9 @@ with st.form('myform', clear_on_submit=True):
         percentage_discount_rate = int(percentage_discount_rate)
         discount_rate = percentage_discount_rate // 100
         response = calculate_optimal_reservation(uploaded_file, discount_rate)
-        #response = generate_response(uploaded_file, query_text)
         result.append(response)
-        data=pd.read_csv(uploaded_file)
-        st.bar_chart(data)
 
 if len(result):
     with st.chat_message("user"):
         st.write("Hello 👋")
         st.write("The optimal hourly reservation value is $", response, "/hour")
-    #st.info("The optimal reservation amount is $",response)
