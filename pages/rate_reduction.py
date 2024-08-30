@@ -19,6 +19,7 @@ def calculate_optimal_reservation(file, discount_rate):
     
     return optimal_hourly_reservation
 
+
 # Show title and description.
 st.title("Rate Reduction Genie")
 st.write(
@@ -40,6 +41,7 @@ with st.form('myform', clear_on_submit=True):
         response = calculate_optimal_reservation(uploaded_file, discount_rate)
         #response = generate_response(uploaded_file, query_text)
         result.append(response)
+        st.bar_chart(data=pd.read_csv(uploaded_file))
 
 if len(result):
     with st.chat_message("user"):
