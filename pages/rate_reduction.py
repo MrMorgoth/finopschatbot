@@ -45,3 +45,5 @@ if len(result):
     with st.chat_message("user"):
         st.write("Hello 👋")
         st.write("The optimal hourly reservation value is $", response, "/hour")
+        data = pd.read_csv(uploaded_file)
+        st.bar_chart(data=data)
