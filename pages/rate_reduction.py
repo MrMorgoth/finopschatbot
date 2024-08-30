@@ -11,13 +11,13 @@ st.write(
 # File upload
 uploaded_file = st.file_uploader('Upload a file', type='csv')
 percentage_discount_rate = st.text_input("Percentage Discount Rate - Don't include the percentage symbol")
-percentage_discount_rate = int(percentage_discount_rate)
-discount_rate = percentage_discount_rate // 100
+
 
 def calculate_optimal_reservation(file):
     # Load the CSV file
     data = pd.read_csv(file)
-    
+    percentage_discount_rate = int(percentage_discount_rate)
+    discount_rate = percentage_discount_rate // 100
     # Calculate the total hours by counting the entries (assuming each entry represents one hour)
     total_hours = len(data)
     
@@ -36,7 +36,7 @@ def calculate_optimal_reservation(file):
 result = []
 with st.form('myform', clear_on_submit=True):
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file))
-    if submitted:  
+    if submitted:
         response = calculate_optimal_reservation(uploaded_file)
         #response = generate_response(uploaded_file, query_text)
         result.append(response)
