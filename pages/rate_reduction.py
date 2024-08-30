@@ -29,8 +29,10 @@ st.write(
 # File upload
 uploaded_file = st.file_uploader('Upload a file', type='csv')
 
+if uploaded_file:
 # Load the CSV file
-data = pd.read_csv(uploaded_file)
+    global data 
+    data = pd.read_csv(uploaded_file)
 
 # Discount Rate
 percentage_discount_rate = st.text_input('Enter the percentage discount:', placeholder = "Don't include the percentage symbol")
