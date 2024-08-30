@@ -44,5 +44,5 @@ with st.form('myform', clear_on_submit=True):
 if len(result):
     with st.chat_message("user"):
         st.write("Hello 👋")
-        st.write("The optimal hourly reservation value is $", response)
+        st.write("The optimal hourly reservation value is $", response, "/hour")
     #st.info("The optimal reservation amount is $",response)
