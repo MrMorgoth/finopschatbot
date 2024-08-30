@@ -27,7 +27,6 @@ st.write(
 
 # File upload
 uploaded_file = st.file_uploader('Upload a file', type='csv')
-percentage_discount_rate = st.text_input("Percentage Discount Rate - Don't include the percentage symbol")
 
 # Discount Rate
 percentage_discount_rate = st.text_input('Enter the percentage discount:', placeholder = "Don't include the percentage symbol")
