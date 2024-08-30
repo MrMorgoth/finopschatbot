@@ -2,22 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Show title and description.
-st.title("Rate Reduction Genie")
-st.write(
-    "Upload a file with 7-day hourly usage data for an instance type and the rate reduction genie will calculate the optimal amount of reservations to reduce total spend."
-)
-
-# File upload
-uploaded_file = st.file_uploader('Upload a file', type='csv')
-percentage_discount_rate = st.text_input("Percentage Discount Rate - Don't include the percentage symbol")
-
-
-def calculate_optimal_reservation(file):
+def calculate_optimal_reservation(file, discount_rate):
     # Load the CSV file
     data = pd.read_csv(file)
-    percentage_discount_rate = int(percentage_discount_rate)
-    discount_rate = percentage_discount_rate // 100
     # Calculate the total hours by counting the entries (assuming each entry represents one hour)
     total_hours = len(data)
     
@@ -32,12 +19,26 @@ def calculate_optimal_reservation(file):
     
     return optimal_hourly_reservation
 
+# Show title and description.
+st.title("Rate Reduction Genie")
+st.write(
+    "Upload a file with 7-day hourly usage data for an instance type and the rate reduction genie will calculate the optimal amount of reservations to reduce total spend."
+)
+
+# File upload
+uploaded_file = st.file_uploader('Upload a file', type='csv')
+percentage_discount_rate = st.text_input("Percentage Discount Rate - Don't include the percentage symbol")
+
+# Discount Rate
+percentage_discount_rate = st.text_input('Enter the percentage discount:', placeholder = "Don't include the percentage symbol")
 
 result = []
 with st.form('myform', clear_on_submit=True):
-    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file))
+    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file, percentage_discount_rate))
     if submitted:
-        response = calculate_optimal_reservation(uploaded_file)
+        percentage_discount_rate = int(percentage_discount_rate)
+        discount_rate = percentage_discount_rate // 100
+        response = calculate_optimal_reservation(uploaded_file, discount_rate)
         #response = generate_response(uploaded_file, query_text)
         result.append(response)
 
