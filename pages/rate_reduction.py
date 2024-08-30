@@ -26,7 +26,7 @@ def calculate_optimal_reservation(file):
 
      # Calculate average hourly usage
     average_ondemand_cost = total_ondemand_cost / total_hours
-    optimal_hourly_reservation = average_ondemand_cost * (1-discount_rate)
+    optimal_hourly_reservation = average_ondemand_cost * (1 - discount_rate)
     
     return optimal_hourly_reservation
 
