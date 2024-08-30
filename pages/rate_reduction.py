@@ -11,7 +11,7 @@ st.write(
 # File upload
 uploaded_file = st.file_uploader('Upload a file', type='csv')
 percentage_discount_rate = st.text_input("Percentage Discount Rate")
-discount_rate = percentage_discount_rate/100
+discount_rate = percentage_discount_rate//100
 
 def calculate_optimal_reservation(file):
     # Load the CSV file
@@ -27,7 +27,7 @@ def calculate_optimal_reservation(file):
 
      # Calculate average hourly usage
     average_ondemand_cost = total_ondemand_cost / total_hours
-    optimal_hourly_reservation = average_ondemand_cost * (1 - discount_rate)
+    optimal_hourly_reservation = average_ondemand_cost * (1 - int(discount_rate))
     
     return optimal_hourly_reservation
 
