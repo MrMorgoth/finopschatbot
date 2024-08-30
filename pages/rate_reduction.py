@@ -47,7 +47,7 @@ with st.form('myform', clear_on_submit=True):
         result.append(response)
 
 if len(result):
-    st.bar_chart(data=data, x=data['Purchase option'], stack=True)
+    st.bar_chart(data=data)
     with st.chat_message("user"):
         st.write("Hello 👋")
         st.write("The optimal hourly reservation value is $", response, "/hour")
