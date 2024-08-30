@@ -11,7 +11,8 @@ st.write(
 # File upload
 uploaded_file = st.file_uploader('Upload a file', type='csv')
 percentage_discount_rate = st.text_input("Percentage Discount Rate - Don't include the percentage symbol")
-discount_rate = int(percentage_discount_rate) // 100
+percentage_discount_rate = int(percentage_discount_rate)
+discount_rate = percentage_discount_rate // 100
 
 def calculate_optimal_reservation(file):
     # Load the CSV file
