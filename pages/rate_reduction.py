@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def calculate_optimal_reservation(file, discount_rate):
+def calculate_optimal_reservation(data, discount_rate):
     # Load the CSV file
-    data = pd.read_csv(file)
+    #data = pd.read_csv(file)
     # Calculate the total hours by counting the entries (assuming each entry represents one hour)
     total_hours = len(data)
     
@@ -29,6 +29,9 @@ st.write(
 # File upload
 uploaded_file = st.file_uploader('Upload a file', type='csv')
 
+# Load the CSV file
+data = pd.read_csv(uploaded_file)
+
 # Discount Rate
 percentage_discount_rate = st.text_input('Enter the percentage discount:', placeholder = "Don't include the percentage symbol")
 
@@ -38,12 +41,11 @@ with st.form('myform', clear_on_submit=True):
     if submitted:
         percentage_discount_rate = int(percentage_discount_rate)
         discount_rate = percentage_discount_rate // 100
-        response = calculate_optimal_reservation(uploaded_file, discount_rate)
+        response = calculate_optimal_reservation(data, discount_rate)
         result.append(response)
 
 if len(result):
+    st.bar_chart(data=data)
     with st.chat_message("user"):
         st.write("Hello 👋")
         st.write("The optimal hourly reservation value is $", response, "/hour")
-        data = pd.read_csv(uploaded_file)
-        st.bar_chart(data=data)
