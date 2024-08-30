@@ -12,10 +12,9 @@ st.write(
 uploaded_file = st.file_uploader('Upload a file', type='csv')
 discount_rate = st.text_input
 
-
-def calculate_optimal_reservation(file_path):
+def calculate_optimal_reservation(file):
     # Load the CSV file
-    data = pd.read_csv(file_path)
+    data = pd.read_csv(file)
     
     # Calculate the total hours by counting the entries (assuming each entry represents one hour)
     total_hours = len(data)
@@ -30,3 +29,15 @@ def calculate_optimal_reservation(file_path):
     optimal_hourly_reservation = average_ondemand_cost * (1-discount_rate)
     
     return optimal_hourly_reservation
+
+
+result = []
+with st.form('myform', clear_on_submit=True):
+    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file))
+    if submitted:  
+        response = calculate_optimal_reservation(uploaded_file)
+        #response = generate_response(uploaded_file, query_text)
+        result.append(response)
+
+if len(result):
+    st.info(response)
