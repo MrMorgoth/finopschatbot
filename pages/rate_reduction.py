@@ -48,6 +48,7 @@ with st.form('myform', clear_on_submit=True):
         percentage_discount_rate = int(percentage_discount_rate)
         discount_rate = percentage_discount_rate // 100
         response = calculate_optimal_reservation(data, discount_rate)
+        st.write(response)
         result.append(response)
 
 if len(result):
