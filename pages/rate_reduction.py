@@ -35,8 +35,8 @@ if uploaded_file:
     data = pd.read_csv(uploaded_file)
     total_ondemand_cost = data['On Demand($)'].sum()
     total_hours = len(data)
-    global average_ondemand_cost
-    average_ondemand_cost = total_ondemand_cost / total_hours
+    global avg_ondemand_cost
+    avg_ondemand_cost = total_ondemand_cost / total_hours
 
 # Discount Rate
 percentage_discount_rate = st.text_input('Enter the percentage discount:', placeholder = "Don't include the percentage symbol")
@@ -54,6 +54,6 @@ if len(result):
     st.bar_chart(data=data)
     with st.chat_message("user"):
         st.write("Hello 👋")
-        st.write("The average On-Demand usage for this period is", average_ondemand_cost, "/hour")
+        st.write("The average On-Demand usage for this period is", avg_ondemand_cost, "/hour")
         st.write("To replace this with a reservation, we make a reservation for an amount which is lower than the On-Demand amount by the discount rate")
-        st.write("The optimal hourly reservation value is $", result, "/hour")
+        st.write("The optimal hourly reservation value is $", response, "/hour")
