@@ -45,7 +45,7 @@ result = []
 with st.form('myform', clear_on_submit=True):
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file, percentage_discount_rate))
     if submitted:
-        percentage_discount_rate = int(percentage_discount_rate)
+        percentage_discount_rate = float(percentage_discount_rate)
         st.write(percentage_discount_rate)
         discount_rate = percentage_discount_rate // 100
         response = calculate_optimal_reservation(data, discount_rate)
