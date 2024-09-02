@@ -33,8 +33,10 @@ if uploaded_file:
 # Load the CSV file
     global data 
     data = pd.read_csv(uploaded_file)
-    global total_ondemand_cost
     total_ondemand_cost = data['On Demand($)'].sum()
+    total_hours = len(data)
+    global average_ondemand_cost
+    average_ondemand_cost = total_ondemand_cost / total_hours
 
 # Discount Rate
 percentage_discount_rate = st.text_input('Enter the percentage discount:', placeholder = "Don't include the percentage symbol")
