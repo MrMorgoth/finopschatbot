@@ -23,7 +23,7 @@ def calculate_optimal_reservation(data, discount_rate):
 # Show title and description.
 st.title("Rate Reduction Genie")
 st.write(
-    "Upload a file with 7-day hourly usage data for an instance type and the rate reduction genie will calculate the optimal amount of reservations to reduce total spend."
+    "Upload a file with 7-day hourly usage data by purchase option for a given instance type and the rate reduction genie will calculate the optimal amount of reservations to reduce total spend."
 )
 
 # File upload
@@ -33,6 +33,8 @@ if uploaded_file:
 # Load the CSV file
     global data 
     data = pd.read_csv(uploaded_file)
+    global total_ondemand_cost
+    total_ondemand_cost = data['On Demand($)'].sum()
 
 # Discount Rate
 percentage_discount_rate = st.text_input('Enter the percentage discount:', placeholder = "Don't include the percentage symbol")
@@ -50,4 +52,6 @@ if len(result):
     st.bar_chart(data=data)
     with st.chat_message("user"):
         st.write("Hello 👋")
+        st.write("The average On-Demand usage for this period is", total_ondemand_cost, "/hour")
+        st.write("To replace this with a reservation, we make a reservation for an amount which is lower than the On-Demand amount by the discount rate")
         st.write("The optimal hourly reservation value is $", response, "/hour")
