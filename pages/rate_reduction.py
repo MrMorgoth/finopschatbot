@@ -54,6 +54,6 @@ if len(result):
     st.bar_chart(data=data)
     with st.chat_message("user"):
         st.write("Hello 👋")
-        st.write("The average On-Demand usage for this period is", total_ondemand_cost, "/hour")
+        st.write("The average On-Demand usage for this period is", average_ondemand_cost, "/hour")
         st.write("To replace this with a reservation, we make a reservation for an amount which is lower than the On-Demand amount by the discount rate")
         st.write("The optimal hourly reservation value is $", response, "/hour")
