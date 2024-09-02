@@ -16,7 +16,7 @@ def calculate_optimal_reservation(data, discount_rate):
      # Calculate average hourly usage
     average_ondemand_cost = total_ondemand_cost / total_hours
     optimal_hourly_reservation = avg_ondemand_cost * (1 - int(discount_rate))
-    
+    st.write(optimal_hourly_reservation)
     return optimal_hourly_reservation
 
 
@@ -48,7 +48,6 @@ with st.form('myform', clear_on_submit=True):
         percentage_discount_rate = int(percentage_discount_rate)
         discount_rate = percentage_discount_rate // 100
         response = calculate_optimal_reservation(data, discount_rate)
-        st.write(response)
         result.append(response)
 
 if len(result):
