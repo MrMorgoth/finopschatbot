@@ -52,7 +52,7 @@ st.write(
 )
 
 # File upload
-uploaded_file = [open(file, 'wb') for file in os.listdir("context")]
+uploaded_file = [open(file, 'r') for file in os.listdir("context")]
 st.info(uploaded_file)
 #st.file_uploader('Upload a file', type='txt')
 
