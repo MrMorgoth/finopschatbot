@@ -102,7 +102,7 @@ wb = Workbook()
 
 # Adding the first sheet with data and a graph
 with st.form('form', clear_on_submit=True):
-    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file, percentage_discount_rate))
+    submitted = st.form_submit_button('Generate Excel Spreadsheet', disabled=not(uploaded_file, percentage_discount_rate))
     if submitted:
         ws1 = wb.active
         add_dataframe_to_sheet(ws1, data, "Instance analysis")
