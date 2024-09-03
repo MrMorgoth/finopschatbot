@@ -29,8 +29,9 @@ def generate_response(uploaded_file, query_text):
         
         documents = []
         for file in uploaded_file:
-            this_file = file.read().decode()
-            documents.append(this_file)
+            st.write(file)
+            #this_file = file.read().decode()
+            #documents.append(this_file)
         # Split documents into chunks
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         texts = text_splitter.create_documents(documents)
