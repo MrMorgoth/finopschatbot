@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from openpyxl import Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.drawing.image import Image
+import io
 
 def calculate_optimal_reservation(data, discount_rate):
     # Load the CSV file
@@ -63,3 +68,52 @@ if len(result):
         st.write("The average On-Demand usage for this period is $", rounded_avg, "/hour")
         st.write("To replace this with a reservation, we make a reservation for an amount which is lower than the On-Demand amount by the discount rate")
         st.write("The optimal hourly reservation value is $", rounded_response, "/hour")
+    
+
+# Create a function to add a DataFrame to an Excel sheet
+def add_dataframe_to_sheet(ws, df, title):
+    # Write DataFrame to Excel sheet
+    ws.title = title
+    for r in dataframe_to_rows(df, index=False, header=True):
+        ws.append(r)
+
+# Create a function to generate a graph and add it to the Excel sheet
+def add_graph_to_sheet(ws, df, chart_title, img_cell):
+    # Generate a plot
+    plt.figure(figsize=(10, 6))
+    df.plot(kind='bar', stacked=True)
+    plt.title(chart_title)
+    plt.xlabel('Hour')
+    plt.ylabel('Cost ($)')
+    plt.tight_layout()
+
+    # Save the plot to an in-memory buffer
+    img_data = io.BytesIO()
+    plt.savefig(img_data, format='png')
+    img_data.seek(0)
+    plt.close()
+
+    # Add the image to the worksheet
+    img = Image(img_data)
+    ws.add_image(img, img_cell)
+
+# Create an Excel workbook and add data and graphs
+wb = Workbook()
+
+# Adding the first sheet with dummy data and a graph
+ws1 = wb.active
+add_dataframe_to_sheet(ws1, data, "Dummy Data 1")
+add_graph_to_sheet(ws1, data[['Reserved($)', 'On Demand($)', 'Unused Reserved($)']], "Cost Analysis", "G2")
+
+# Save the workbook to a file
+excel_file_path = '/mnt/data/reservationanalysis.xlsx'
+wb.save(excel_file_path)
+
+with open('reservationanalysis.xlsx', 'rb') as f:
+   st.download_button('Download Excel Spreadsheet', f, file_name='reservationanalysis.xlsx')  # Defaults to 'application/octet-stream'
+
+# Grab the return value of the button
+
+if st.download_button(...):
+   st.write('Thanks for downloading!')
+
