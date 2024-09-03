@@ -53,7 +53,7 @@ st.write(
 )
 
 # File upload
-uploaded_file = os.path("context/personas.txt")
+uploaded_file = open("context/personas.txt")
 st.info(uploaded_file)
 #st.file_uploader('Upload a file', type='txt')
 
