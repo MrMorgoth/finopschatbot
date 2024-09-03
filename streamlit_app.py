@@ -26,7 +26,11 @@ prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 def generate_response(uploaded_file, query_text):
     # Load document if file is uploaded
     if uploaded_file is not None:
-        documents = [uploaded_file.read().decode()]
+        
+        documents = []
+        for file in uploaded_file:
+            this_file = file.read().decode()
+            documents.append(this_file)
         # Split documents into chunks
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         texts = text_splitter.create_documents(documents)
@@ -52,8 +56,8 @@ st.write(
 )
 
 # File upload
-uploaded_file = [open(file, 'r') for file in os.listdir("context")]
-st.info(uploaded_file)
+uploaded_file = os.listdir("context")
+#st.info(uploaded_file)
 #st.file_uploader('Upload a file', type='txt')
 
 # Query text
