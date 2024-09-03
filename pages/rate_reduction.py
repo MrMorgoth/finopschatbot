@@ -111,7 +111,7 @@ with st.form('form', clear_on_submit=True):
         excel_file_path = 'reservationanalysis.xlsx'
         wb.save(excel_file_path)
         with open('reservationanalysis.xlsx', 'rb') as f:
-            st.download_button(label='Download Excel Spreadsheet', data=excel_file_path, file_name='reservationanalysis.xlsx')  # Defaults to 'application/octet-stream'
+            st.download_button(label='Download Excel Spreadsheet', data=excel_file_path, file_name='reservationanalysis.xlsx', mime="application/vnd.ms-excel")
 
 
 # Grab the return value of the button
