@@ -9,6 +9,7 @@ faiss-cpu
 langchain-core
 llama-index
 llama-index-readers-google
+numpy
 matplotlib
 openpyxl
 io
