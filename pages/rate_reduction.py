@@ -114,6 +114,6 @@ with open('reservationanalysis.xlsx', 'rb') as f:
 
 # Grab the return value of the button
 
-if st.download_button(...):
-   st.write('Thanks for downloading!')
+#if st.download_button(...):
+   #st.write('Thanks for downloading!')
 
