@@ -26,7 +26,8 @@ prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 def generate_response(uploaded_file, query_text):
     # Load document if file is uploaded
     if uploaded_file is not None:
-        documents = [uploaded_file.read().decode()]
+        for f in uploaded_file:
+            documents = [f.read().decode()]
         # Split documents into chunks
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         texts = text_splitter.create_documents(documents)
@@ -61,7 +62,7 @@ query_text = st.text_input('Enter your question:', placeholder = 'Please provide
 # Form input and query
 result = []
 with st.form('myform', clear_on_submit=True):
-    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
+    submitted = st.form_submit_button('Submit', disabled=not(query_text))
     if submitted:  
         response = generate_response(uploaded_file, query_text)
         #response = generate_response(uploaded_file, query_text)
