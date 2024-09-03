@@ -107,13 +107,14 @@ with st.form('form', clear_on_submit=True):
         ws1 = wb.active
         add_dataframe_to_sheet(ws1, data, "Instance analysis")
         add_graph_to_sheet(ws1, data[['Reserved($)', 'On Demand($)', 'Unused Reserved($)']], "Cost Analysis", "G2")
+        with open('reservationanalysis.xlsx', 'rb') as f:
+            st.download_button('Download Excel Spreadsheet', f, file_name='reservationanalysis.xlsx')  # Defaults to 'application/octet-stream'
 
 # Save the workbook to a file
 excel_file_path = 'reservationanalysis.xlsx'
 wb.save(excel_file_path)
 
-with open('reservationanalysis.xlsx', 'rb') as f:
-   st.download_button('Download Excel Spreadsheet', f, file_name='reservationanalysis.xlsx')  # Defaults to 'application/octet-stream'
+
 
 # Grab the return value of the button
 
