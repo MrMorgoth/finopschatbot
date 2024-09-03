@@ -53,9 +53,7 @@ st.write(
 )
 
 # File upload
-uploaded_file = open("context/personas.txt")
-st.info(uploaded_file)
-#st.file_uploader('Upload a file', type='txt')
+uploaded_file = st.file_uploader('Upload a txt file', type='txt')
 
 # Query text
 query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
@@ -63,7 +61,7 @@ query_text = st.text_input('Enter your question:', placeholder = 'Please provide
 # Form input and query
 result = []
 with st.form('myform', clear_on_submit=True):
-    submitted = st.form_submit_button('Submit', disabled=not(query_text))
+    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
     if submitted:  
         response = generate_response(uploaded_file, query_text)
         #response = generate_response(uploaded_file, query_text)
