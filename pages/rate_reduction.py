@@ -100,10 +100,13 @@ def add_graph_to_sheet(ws, df, chart_title, img_cell):
 # Create an Excel workbook and add data and graphs
 wb = Workbook()
 
-# Adding the first sheet with dummy data and a graph
-ws1 = wb.active
-add_dataframe_to_sheet(ws1, data, "Instance analysis")
-add_graph_to_sheet(ws1, data[['Reserved($)', 'On Demand($)', 'Unused Reserved($)']], "Cost Analysis", "G2")
+# Adding the first sheet with data and a graph
+with st.form('form', clear_on_submit=True):
+    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file, percentage_discount_rate))
+    if submitted:
+        ws1 = wb.active
+        add_dataframe_to_sheet(ws1, data, "Instance analysis")
+        add_graph_to_sheet(ws1, data[['Reserved($)', 'On Demand($)', 'Unused Reserved($)']], "Cost Analysis", "G2")
 
 # Save the workbook to a file
 excel_file_path = 'reservationanalysis.xlsx'
