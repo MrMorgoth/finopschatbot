@@ -12,13 +12,13 @@ if "messages" not in st.session_state.keys():  # Initialise the chat messages hi
     st.session_state.messages = [
         {
             "role": "assistant",
-            "content": "Ask me a question about Streamlit's open-source Python library!",
+            "content": "Ask me a question about FinOps!",
         }
     ]
 
 @st.cache_resource(show_spinner=False)
 def load_data():
-    reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
+    reader = SimpleDirectoryReader(input_dir="data", recursive=True)
     docs = reader.load_data()
     Settings.llm = OpenAI(
         model="gpt-3.5-turbo",
