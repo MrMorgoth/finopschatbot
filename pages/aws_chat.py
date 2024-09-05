@@ -1,12 +1,13 @@
 import streamlit as st
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 import pandas as pd
 from datetime import datetime, timedelta
 
 # Initialize OpenAI API for LLM interaction
-openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # AWS Cost Explorer query function for detailed EC2 cost data
 def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
@@ -47,7 +48,7 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
 
         # Parse the response
         cost_data = []
-        for result in response['ResultsByTime']:
+        for result in response.ResultsByTime:
             for group in result['Groups']:
                 instance_type = group['Keys'][1]
                 region = group['Keys'][2]
@@ -59,7 +60,7 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
         # Return the data as a DataFrame
         df = pd.DataFrame(cost_data, columns=['Date', 'Instance Type', 'Region', 'Usage Type', 'Cost'])
         return df
-    
+
     except NoCredentialsError:
         return None, "No credentials provided."
     except PartialCredentialsError:
@@ -71,14 +72,12 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
 def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
     try:
         # Use the new OpenAI API interface
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are an assistant that helps with AWS cost data queries."},
-                {"role": "user", "content": question}
-            ],
-        )
-        answer = response['choices'][0]['message']['content'].strip()
+        response = client.chat.completions.create(model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are an assistant that helps with AWS cost data queries."},
+            {"role": "user", "content": question}
+        ])
+        answer = response.choices[0].message.content.strip()
 
         # If the LLM detects a question related to AWS usage, it fetches the data
         if "top instances by on-demand spend" in question.lower():
