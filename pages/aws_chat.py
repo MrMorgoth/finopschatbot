@@ -81,13 +81,12 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
                 return f"Error fetching AWS data: {error_message}"
         
         # Otherwise, let the LLM handle the question as usual
-        response = client.chat.completions.create(
-            model="gpt-4",
+        response = client.chat.completions.create(model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are an AI assistant with the ability to query AWS cost data using the provided credentials."},
-                {"role": "user", "content": question}
-            ],
-        )
+            {"role": "system", "content": "You are an AI assistant with the ability to query AWS cost data using the provided credentials."},
+            {"role": "user", "content": question}
+        ])
+        answer = response.choices[0].message.content.strip()
         answer = response['choices'][0]['message']['content'].strip()
         return f"LLM: {answer}"
     
