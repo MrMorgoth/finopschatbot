@@ -1,71 +1,61 @@
 import streamlit as st
-from openai import OpenAI
-import os
-import time
-from langchain.text_splitter import CharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.chains import RetrievalQA
-from langchain_community.vectorstores import FAISS
-from langchain_openai.chat_models import ChatOpenAI
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
-from langchain import hub
-from langchain.chains.retrieval import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-import glob
+import openai
+from llama_index.llms.openai import OpenAI
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 
-
-# Initiate OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
+st.set_page_config(page_title="FinOps Chatbot", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
+st.title("Chat with FinOps Docs 💬🦙")
 
-prompt = hub.pull("langchain-ai/retrieval-qa-chat")
-    
+if "messages" not in st.session_state.keys():  # Initialise the chat messages history
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": "Ask me a question about FinOps!",
+        }
+    ]
 
-def generate_response(uploaded_file, query_text):
-    # Load document if file is uploaded
-    if uploaded_file is not None:
-        # Load File
-        documents = [uploaded_file.read().decode()]
-        # Split documents into chunks
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-        texts = text_splitter.create_documents(documents)
-        # Select embeddings
-        embeddings = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
-        # Create a vectorstore from documents
-        vectorstore = FAISS.from_documents(documents=texts,
-                                   embedding=OpenAIEmbeddings())
-        # Create retriever interface
-        retriever = vectorstore.as_retriever()
-        # LLM
-        llm = ChatOpenAI(api_key=openai_api_key)
-        # Create QA chain
-        combine_docs_chain = create_stuff_documents_chain(llm, prompt)
-        rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chain)
-        output = rag_chain.invoke({"input": query_text})
-        return output["answer"]
-    
-# Show title and description.
-st.title("💬 FinOps Chatbot")
-st.write(
-    "This is a simple chatbot that uses Generative AI combined with FinOps specific content to generate more accurate responses. "
-)
+@st.cache_resource(show_spinner=False)
+def load_data():
+    reader = SimpleDirectoryReader(input_dir="pages/data", recursive=True)
+    docs = reader.load_data()
+    Settings.llm = OpenAI(
+        model="gpt-3.5-turbo",
+        temperature=0.2,
+        system_prompt="""You are an expert on 
+        FinOps and your 
+        job is to answer technical questions. 
+        Assume that all questions are related 
+        to FinOps. Keep 
+        your answers technical and based on 
+        facts – do not hallucinate features. Write in British English.""",
+    )
+    index = VectorStoreIndex.from_documents(docs)
+    return index
 
-# File upload
-uploaded_file = st.file_uploader('Upload a txt file', type='txt')
 
-# Query text
-query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
+index = load_data()
 
-# Form input and query
-result = []
-with st.form('myform', clear_on_submit=True):
-    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
-    if submitted:  
-        response = generate_response(uploaded_file, query_text)
-        #response = generate_response(uploaded_file, query_text)
-        result.append(response)
+if "chat_engine" not in st.session_state.keys():  # Initialise the chat engine
+    st.session_state.chat_engine = index.as_chat_engine(
+        chat_mode="condense_question", verbose=True, streaming=True
+    )
 
-if len(result):
-    st.info(response)
+if prompt := st.chat_input(
+    "Ask a question"
+):  # Prompt for user input and save to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+for message in st.session_state.messages:  # Write message history to UI
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
+
+# If last message is not from assistant, generate a new response
+if st.session_state.messages[-1]["role"] != "assistant":
+    with st.chat_message("assistant"):
+        response_stream = st.session_state.chat_engine.stream_chat(prompt)
+        st.write_stream(response_stream.response_gen)
+        message = {"role": "assistant", "content": response_stream.response}
+        # Add response to message history
+        st.session_state.messages.append(message)
