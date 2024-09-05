@@ -40,6 +40,10 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             }
         )
 
+        # Check if there are any results
+        if not response['ResultsByTime'][0]['Groups']:
+            return None, "No costs or instances found for the specified time period."
+
         # Parse the response to find top 5 RDS and EC2 instances by cost
         cost_data = []
         for result in response['ResultsByTime'][0]['Groups']:
@@ -52,7 +56,7 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
         df = pd.DataFrame(cost_data, columns=['Service', 'Instance Type', 'Cost'])
         top_5 = df.sort_values(by='Cost', ascending=False).head(5)
 
-        return top_5
+        return top_5, None
     
     except NoCredentialsError:
         return None, "No credentials provided."
@@ -89,6 +93,7 @@ if st.button("Get Top 5 RDS and EC2 Instances"):
             plt.xticks(rotation=45)
             st.pyplot(plt)
         else:
-            st.error(f"Failed to retrieve cost data: {message}")
+            st.warning(message)
     else:
         st.warning("Please provide both Access Key ID and Secret Access Key.")
+
