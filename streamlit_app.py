@@ -5,6 +5,20 @@ from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
+def main():
+    # builds the sidebar menu
+    with st.sidebar:
+        st.page_link('streamlit_app.py', label='FinOps Analyst Chat')
+        st.page_link('pages/rate_reduction.py', label='Rate Reduction Genie')
+
+    st.title(f'FinOps Chatbot')
+
+    # your content
+
+
+if __name__ == '__main__':
+    main()
+
 st.set_page_config(page_title="FinOps Chatbot", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with your FinOps Analyst 💬")
 
