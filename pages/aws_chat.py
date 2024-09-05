@@ -46,14 +46,12 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
 
         # Parse the response
         cost_data = []
-        for result in response.ResultsByTime:
-            for group in result['Groups']:
-                instance_type = group['Keys'][1]
-                region = group['Keys'][2]
-                usage_type = group['Keys'][3]
-                amount = float(group['Metrics']['UnblendedCost']['Amount'])
-                date = result['TimePeriod']['Start']
-                cost_data.append([date, instance_type, region, usage_type, amount])
+        for result in response['ResultsByTime'][0]['Groups']:
+            service = result['Keys'][0]
+            instance_type = result['Keys'][1]
+            amount = float(result['Metrics']['UnblendedCost']['Amount'])
+            cost_data.append([service, instance_type, amount])
+        
 
         # Return the data as a DataFrame
         df = pd.DataFrame(cost_data, columns=['Date', 'Instance Type', 'Region', 'Usage Type', 'Cost'])
