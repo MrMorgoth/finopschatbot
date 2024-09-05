@@ -5,11 +5,10 @@ from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
-st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
-st.title("Chat with the Streamlit docs, powered by LlamaIndex 💬🦙")
-st.info("Check out the full tutorial to build this app in our [blog post](https://blog.streamlit.io/build-a-chatbot-with-custom-data-sources-powered-by-llamaindex/)", icon="📃")
+st.set_page_config(page_title="FinOps Chatbot", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
+st.title("Chat with FinOps Docs 💬🦙")
 
-if "messages" not in st.session_state.keys():  # Initialize the chat messages history
+if "messages" not in st.session_state.keys():  # Initialise the chat messages history
     st.session_state.messages = [
         {
             "role": "assistant",
@@ -25,10 +24,10 @@ def load_data():
         model="gpt-3.5-turbo",
         temperature=0.2,
         system_prompt="""You are an expert on 
-        the Streamlit Python library and your 
+        FinOps and your 
         job is to answer technical questions. 
         Assume that all questions are related 
-        to the Streamlit Python library. Keep 
+        to FinOps. Keep 
         your answers technical and based on 
         facts – do not hallucinate features.""",
     )
@@ -38,7 +37,7 @@ def load_data():
 
 index = load_data()
 
-if "chat_engine" not in st.session_state.keys():  # Initialize the chat engine
+if "chat_engine" not in st.session_state.keys():  # Initialise the chat engine
     st.session_state.chat_engine = index.as_chat_engine(
         chat_mode="condense_question", verbose=True, streaming=True
     )
