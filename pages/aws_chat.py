@@ -74,14 +74,14 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
         # Use the new OpenAI API interface
         response = client.chat.completions.create(model="gpt-4",
         messages=[
-            {"role": "system", "content": "You are an assistant that helps with AWS cost data queries."},
+            {"role": "system", "content": "You are an AI assistant with the ability to query AWS cost data using the provided credentials."},
             {"role": "user", "content": question}
         ])
         answer = response.choices[0].message.content.strip()
 
         # If the LLM detects a question related to AWS usage, it fetches the data
         if "top instances by on-demand spend" in question.lower():
-            service = "Amazon Elastic Compute Cloud - Compute"  # Example for EC2
+            service = "Amazon Elastic Compute Cloud - Compute"  # EC2 instance service
             top_instances, error_message = get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             if top_instances is not None:
                 return f"LLM: {answer}\n\nHere are the top EC2 instances by On-Demand spend:\n{top_instances}"
@@ -89,8 +89,9 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
                 return f"LLM: {answer}\n\nError fetching AWS data: {error_message}"
         else:
             return f"LLM: {answer}"
+        
     except Exception as e:
-        return f"Error occurred while interacting with the LLM: {str(e)}"
+            return f"Error occurred while interacting with the LLM: {str(e)}"
 
 # Streamlit UI for chat interface
 st.title("Chat with LLM and Query AWS Cost Data")
