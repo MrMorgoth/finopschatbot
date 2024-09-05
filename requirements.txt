@@ -12,3 +12,4 @@ llama-index-readers-google
 numpy
 matplotlib
 openpyxl
+nltk
