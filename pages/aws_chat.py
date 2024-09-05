@@ -71,6 +71,15 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
 # LLM Interaction function (Updated for OpenAI API v1.0.0)
 def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
     try:
+        # If the user's question is related to AWS cost data (intercept)
+        if "top instances by on-demand spend" in question.lower():
+            service = "Amazon Elastic Compute Cloud - Compute"  # EC2 instance service
+            top_instances, error_message = get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
+            if top_instances is not None:
+                return f"Here are the top EC2 instances by On-Demand spend:\n{top_instances}"
+            else:
+                return f"Error fetching AWS data: {error_message}"
+            
         # Use the new OpenAI API interface
         response = client.chat.completions.create(model="gpt-4",
         messages=[
@@ -78,17 +87,6 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
             {"role": "user", "content": question}
         ])
         answer = response.choices[0].message.content.strip()
-
-        # If the LLM detects a question related to AWS usage, it fetches the data
-        if "top instances by on-demand spend" in question.lower():
-            service = "Amazon Elastic Compute Cloud - Compute"  # EC2 instance service
-            top_instances, error_message = get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
-            if top_instances is not None:
-                return f"LLM: {answer}\n\nHere are the top EC2 instances by On-Demand spend:\n{top_instances}"
-            else:
-                return f"LLM: {answer}\n\nError fetching AWS data: {error_message}"
-        else:
-            return f"LLM: {answer}"
         
     except Exception as e:
             return f"Error occurred while interacting with the LLM: {str(e)}"
