@@ -37,7 +37,11 @@ def get_aws_cost_data(aws_access_key_id, aws_secret_access_key, region_name):
             amount = float(result['Total']['BlendedCost']['Amount'])
             cost_data.append([date, amount])
 
-        return pd.DataFrame(cost_data, columns=['Date', 'Cost'])
+        # Create a DataFrame and convert the 'Date' column to datetime
+        df = pd.DataFrame(cost_data, columns=['Date', 'Cost'])
+        df['Date'] = pd.to_datetime(df['Date'])
+
+        return df
     
     except NoCredentialsError:
         return None, "No credentials provided."
@@ -64,7 +68,9 @@ if st.button("Get AWS Cost Data"):
             
             # Visualize the cost data
             st.write(cost_data)
-            st.line_chart(cost_data.set_index('Date'))
+            
+            # Ensure the Date column is used as the index
+            st.line_chart(cost_data.set_index('Date')['Cost'])
             
             # Plot cost trends with Matplotlib
             plt.figure(figsize=(10, 6))
