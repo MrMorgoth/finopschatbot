@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 # Connect to AWS Cost Explorer
-def get_aws_cost_data(aws_access_key_id, aws_secret_access_key, region_name):
+def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
     try:
         # Create a boto3 client for Cost Explorer
         client = boto3.client(
@@ -16,32 +16,42 @@ def get_aws_cost_data(aws_access_key_id, aws_secret_access_key, region_name):
             region_name=region_name
         )
 
-        # Define the time period for the past 30 days
+        # Define the time period for the past month
         end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=30)
+        start_date = (end_date.replace(day=1) - timedelta(days=1)).replace(day=1)
 
-        # Query AWS Cost Explorer
+        # Query AWS Cost Explorer for RDS and EC2 On-Demand costs
         response = client.get_cost_and_usage(
             TimePeriod={
                 'Start': start_date.strftime('%Y-%m-%d'),
                 'End': end_date.strftime('%Y-%m-%d')
             },
-            Granularity='DAILY',
-            Metrics=['BlendedCost'],
+            Granularity='MONTHLY',
+            Metrics=['UnblendedCost'],
+            GroupBy=[
+                {'Type': 'DIMENSION', 'Key': 'SERVICE'},
+                {'Type': 'DIMENSION', 'Key': 'INSTANCE_TYPE'}
+            ],
+            Filter={
+                'Or': [
+                    {'Dimensions': {'Key': 'SERVICE', 'Values': ['Amazon Relational Database Service', 'Amazon Elastic Compute Cloud - Compute']}}
+                ]
+            }
         )
 
-        # Extract the data
+        # Parse the response to find top 5 RDS and EC2 instances by cost
         cost_data = []
-        for result in response['ResultsByTime']:
-            date = result['TimePeriod']['Start']
-            amount = float(result['Total']['BlendedCost']['Amount'])
-            cost_data.append([date, amount])
+        for result in response['ResultsByTime'][0]['Groups']:
+            service = result['Keys'][0]
+            instance_type = result['Keys'][1]
+            amount = float(result['Metrics']['UnblendedCost']['Amount'])
+            cost_data.append([service, instance_type, amount])
 
-        # Create a DataFrame and convert the 'Date' column to datetime
-        df = pd.DataFrame(cost_data, columns=['Date', 'Cost'])
-        df['Date'] = pd.to_datetime(df['Date'])
+        # Create a DataFrame and sort by cost
+        df = pd.DataFrame(cost_data, columns=['Service', 'Instance Type', 'Cost'])
+        top_5 = df.sort_values(by='Cost', ascending=False).head(5)
 
-        return df
+        return top_5
     
     except NoCredentialsError:
         return None, "No credentials provided."
@@ -51,7 +61,7 @@ def get_aws_cost_data(aws_access_key_id, aws_secret_access_key, region_name):
         return None, str(e)
 
 # Streamlit app interface
-st.title('AWS Cost Trends')
+st.title('Top 5 RDS and EC2 Instances by On-Demand Expenditure')
 
 # Collect AWS credentials from the user
 aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
@@ -59,24 +69,21 @@ aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
 region_name = st.text_input("AWS Region (optional)", "us-east-1")
 
 # Submit button
-if st.button("Get AWS Cost Data"):
+if st.button("Get Top 5 RDS and EC2 Instances"):
     if aws_access_key_id and aws_secret_access_key:
         # Fetch AWS cost data
-        cost_data, message = get_aws_cost_data(aws_access_key_id, aws_secret_access_key, region_name)
-        if cost_data is not None:
-            st.success("AWS Cost Data Retrieved!")
+        top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
+        if top_5_instances is not None:
+            st.success("Top 5 Instances Retrieved!")
             
-            # Visualize the cost data
-            st.write(cost_data)
+            # Display the top 5 instances
+            st.write(top_5_instances)
             
-            # Ensure the Date column is used as the index
-            st.line_chart(cost_data.set_index('Date')['Cost'])
-            
-            # Plot cost trends with Matplotlib
+            # Plot the top 5 instances with Matplotlib
             plt.figure(figsize=(10, 6))
-            plt.plot(cost_data['Date'], cost_data['Cost'], marker='o')
-            plt.title('AWS Daily Cost Trends (Last 30 Days)')
-            plt.xlabel('Date')
+            plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
+            plt.title('Top 5 RDS and EC2 Instances by On-Demand Cost')
+            plt.xlabel('Instance Type')
             plt.ylabel('Cost ($)')
             plt.xticks(rotation=45)
             st.pyplot(plt)
