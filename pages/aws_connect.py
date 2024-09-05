@@ -33,9 +33,10 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
                 {'Type': 'DIMENSION', 'Key': 'INSTANCE_TYPE'}
             ],
             Filter={
-                'Or': [
-                    {'Dimensions': {'Key': 'SERVICE', 'Values': ['Amazon Relational Database Service', 'Amazon Elastic Compute Cloud - Compute']}}
-                ]
+                'Dimensions': {
+                    'Key': 'SERVICE',
+                    'Values': ['Amazon Relational Database Service', 'Amazon Elastic Compute Cloud - Compute']
+                }
             }
         )
 
