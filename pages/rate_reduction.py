@@ -8,8 +8,6 @@ from openpyxl.drawing.image import Image
 import io
 
 def calculate_optimal_reservation(data, discount_rate):
-    # Load the CSV file
-    #data = pd.read_csv(file)
     # Calculate the total hours by counting the entries (assuming each entry represents one hour)
     total_hours = len(data)
     
