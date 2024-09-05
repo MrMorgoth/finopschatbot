@@ -6,7 +6,7 @@ from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 st.set_page_config(page_title="FinOps Chatbot", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
-st.title("Chat with FinOps Docs 💬🦙")
+st.title("Chat with FinOps Docs 💬")
 
 if "messages" not in st.session_state.keys():  # Initialise the chat messages history
     st.session_state.messages = [
