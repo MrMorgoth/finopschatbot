@@ -71,7 +71,7 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
 def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
     try:
         # Use the new OpenAI API interface
-        response = openai.chat_completions.create(
+        response = openai.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are an assistant that helps with AWS cost data queries."},
