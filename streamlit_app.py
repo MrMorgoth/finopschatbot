@@ -19,7 +19,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-st.set_page_config(page_title="FinOps Chatbot", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
+#st.set_page_config(page_title="FinOps Chatbot", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with your FinOps Analyst 💬")
 
 if "messages" not in st.session_state.keys():  # Initialise the chat messages history
