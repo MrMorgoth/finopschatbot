@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 # Initialize OpenAI API for LLM interaction
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# AWS Cost Explorer query function
-def get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service):
+# AWS Cost Explorer query function for detailed EC2 cost data
+def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
     try:
         # Create a boto3 client for Cost Explorer
         client = boto3.client(
@@ -23,35 +23,41 @@ def get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service
         end_date = datetime.now().date()
         start_date = (end_date.replace(day=1) - timedelta(days=1)).replace(day=1)
 
-        # Query AWS Cost Explorer for a specific service (EC2, RDS)
+        # Query AWS Cost Explorer for detailed EC2 cost data
         response = client.get_cost_and_usage(
             TimePeriod={
                 'Start': start_date.strftime('%Y-%m-%d'),
                 'End': end_date.strftime('%Y-%m-%d')
             },
-            Granularity='MONTHLY',
+            Granularity='DAILY',  # Daily breakdown for detailed cost view
             Metrics=['UnblendedCost'],
             GroupBy=[
                 {'Type': 'DIMENSION', 'Key': 'SERVICE'},
-                {'Type': 'DIMENSION', 'Key': 'INSTANCE_TYPE'}
+                {'Type': 'DIMENSION', 'Key': 'INSTANCE_TYPE'},
+                {'Type': 'DIMENSION', 'Key': 'REGION'},
+                {'Type': 'DIMENSION', 'Key': 'USAGE_TYPE'}
             ],
             Filter={
                 'Dimensions': {
                     'Key': 'SERVICE',
-                    'Values': [service]
+                    'Values': ['Amazon Elastic Compute Cloud - Compute']
                 }
             }
         )
 
         # Parse the response
         cost_data = []
-        for result in response['ResultsByTime'][0]['Groups']:
-            instance_type = result['Keys'][1]
-            amount = float(result['Metrics']['UnblendedCost']['Amount'])
-            cost_data.append([instance_type, amount])
+        for result in response['ResultsByTime']:
+            for group in result['Groups']:
+                instance_type = group['Keys'][1]
+                region = group['Keys'][2]
+                usage_type = group['Keys'][3]
+                amount = float(group['Metrics']['UnblendedCost']['Amount'])
+                date = result['TimePeriod']['Start']
+                cost_data.append([date, instance_type, region, usage_type, amount])
 
         # Return the data as a DataFrame
-        df = pd.DataFrame(cost_data, columns=['Instance Type', 'Cost'])
+        df = pd.DataFrame(cost_data, columns=['Date', 'Instance Type', 'Region', 'Usage Type', 'Cost'])
         return df
     
     except NoCredentialsError:
@@ -61,11 +67,12 @@ def get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service
     except Exception as e:
         return None, str(e)
 
-# LLM Interaction function (Updated for OpenAI API v1)
+# LLM Interaction function (Updated for OpenAI API v1.0.0)
 def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+        # Use the new OpenAI API interface
+        response = openai.chat_completions.create(
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are an assistant that helps with AWS cost data queries."},
                 {"role": "user", "content": question}
@@ -76,7 +83,7 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
         # If the LLM detects a question related to AWS usage, it fetches the data
         if "top instances by on-demand spend" in question.lower():
             service = "Amazon Elastic Compute Cloud - Compute"  # Example for EC2
-            top_instances, error_message = get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service)
+            top_instances, error_message = get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             if top_instances is not None:
                 return f"LLM: {answer}\n\nHere are the top EC2 instances by On-Demand spend:\n{top_instances}"
             else:
@@ -106,4 +113,3 @@ if st.button("Ask"):
         st.write(llm_response)
     else:
         st.warning("Please provide AWS credentials and ask a question.")
-
