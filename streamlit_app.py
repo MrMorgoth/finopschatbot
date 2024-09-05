@@ -11,7 +11,7 @@ def main():
         st.page_link('streamlit_app.py', label='FinOps Analyst Chat')
         st.page_link('pages/rate_reduction.py', label='Rate Reduction Genie')
 
-    st.title(f'FinOps Chatbot')
+    #st.title(f'FinOps Chatbot')
 
     # your content
 
