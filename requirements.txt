@@ -13,3 +13,4 @@ numpy
 matplotlib
 openpyxl
 nltk
+boto3
