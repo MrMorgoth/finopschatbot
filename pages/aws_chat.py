@@ -61,25 +61,30 @@ def get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service
     except Exception as e:
         return None, str(e)
 
-# LLM Interaction function
+# LLM Interaction function (Updated for OpenAI API v1)
 def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=question,
-        max_tokens=150
-    )
-    answer = response.choices[0].text.strip()
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an assistant that helps with AWS cost data queries."},
+                {"role": "user", "content": question}
+            ],
+        )
+        answer = response['choices'][0]['message']['content'].strip()
 
-    # If the LLM detects a question related to AWS usage, it fetches the data
-    if "top instances by on-demand spend" in question.lower():
-        service = "Amazon Elastic Compute Cloud - Compute"  # Example for EC2
-        top_instances, error_message = get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service)
-        if top_instances is not None:
-            return f"LLM: {answer}\n\nHere are the top EC2 instances by On-Demand spend:\n{top_instances}"
+        # If the LLM detects a question related to AWS usage, it fetches the data
+        if "top instances by on-demand spend" in question.lower():
+            service = "Amazon Elastic Compute Cloud - Compute"  # Example for EC2
+            top_instances, error_message = get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service)
+            if top_instances is not None:
+                return f"LLM: {answer}\n\nHere are the top EC2 instances by On-Demand spend:\n{top_instances}"
+            else:
+                return f"LLM: {answer}\n\nError fetching AWS data: {error_message}"
         else:
-            return f"LLM: {answer}\n\nError fetching AWS data: {error_message}"
-    else:
-        return f"LLM: {answer}"
+            return f"LLM: {answer}"
+    except Exception as e:
+        return f"Error occurred while interacting with the LLM: {str(e)}"
 
 # Streamlit UI for chat interface
 st.title("Chat with LLM and Query AWS Cost Data")
@@ -101,3 +106,4 @@ if st.button("Ask"):
         st.write(llm_response)
     else:
         st.warning("Please provide AWS credentials and ask a question.")
+
