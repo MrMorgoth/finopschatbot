@@ -33,10 +33,8 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
             Granularity='DAILY',  # Daily breakdown for detailed cost view
             Metrics=['UnblendedCost'],
             GroupBy=[
-                {'Type': 'DIMENSION', 'Key': 'SERVICE'},
                 {'Type': 'DIMENSION', 'Key': 'INSTANCE_TYPE'},
-                {'Type': 'DIMENSION', 'Key': 'REGION'},
-                {'Type': 'DIMENSION', 'Key': 'USAGE_TYPE'}
+                {'Type': 'DIMENSION', 'Key': 'REGION'}
             ],
             Filter={
                 'Dimensions': {
