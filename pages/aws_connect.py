@@ -1,12 +1,15 @@
 import streamlit as st
 import boto3
-import pandas as pd
-import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+import openai
+import pandas as pd
+from datetime import datetime, timedelta
 
-# Connect to AWS Cost Explorer
-def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
+# Initialize OpenAI API for LLM interaction
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+# AWS Cost Explorer query function
+def get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service):
     try:
         # Create a boto3 client for Cost Explorer
         client = boto3.client(
@@ -20,7 +23,7 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
         end_date = datetime.now().date()
         start_date = (end_date.replace(day=1) - timedelta(days=1)).replace(day=1)
 
-        # Query AWS Cost Explorer for RDS and EC2 On-Demand costs
+        # Query AWS Cost Explorer for a specific service (EC2, RDS)
         response = client.get_cost_and_usage(
             TimePeriod={
                 'Start': start_date.strftime('%Y-%m-%d'),
@@ -35,28 +38,21 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             Filter={
                 'Dimensions': {
                     'Key': 'SERVICE',
-                    'Values': ['Amazon Relational Database Service', 'Amazon Elastic Compute Cloud - Compute']
+                    'Values': [service]
                 }
             }
         )
 
-        # Check if there are any results
-        if not response['ResultsByTime'][0]['Groups']:
-            return None, "No costs or instances found for the specified time period."
-
-        # Parse the response to find top 5 RDS and EC2 instances by cost
+        # Parse the response
         cost_data = []
         for result in response['ResultsByTime'][0]['Groups']:
-            service = result['Keys'][0]
             instance_type = result['Keys'][1]
             amount = float(result['Metrics']['UnblendedCost']['Amount'])
-            cost_data.append([service, instance_type, amount])
+            cost_data.append([instance_type, amount])
 
-        # Create a DataFrame and sort by cost
-        df = pd.DataFrame(cost_data, columns=['Service', 'Instance Type', 'Cost'])
-        top_5 = df.sort_values(by='Cost', ascending=False).head(5)
-
-        return top_5, None
+        # Return the data as a DataFrame
+        df = pd.DataFrame(cost_data, columns=['Instance Type', 'Cost'])
+        return df
     
     except NoCredentialsError:
         return None, "No credentials provided."
@@ -65,35 +61,45 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
     except Exception as e:
         return None, str(e)
 
-# Streamlit app interface
-st.title('Top 5 RDS and EC2 Instances by On-Demand Expenditure')
+# LLM Interaction function
+def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=question,
+        max_tokens=150
+    )
+    answer = response.choices[0].text.strip()
 
-# Collect AWS credentials from the user
+    # If the LLM detects a question related to AWS usage, it fetches the data
+    if "top instances by on-demand spend" in question.lower():
+        service = "Amazon Elastic Compute Cloud - Compute"  # Example for EC2
+        top_instances, error_message = get_cost_data(aws_access_key_id, aws_secret_access_key, region_name, service)
+        if top_instances is not None:
+            return f"LLM: {answer}\n\nHere are the top EC2 instances by On-Demand spend:\n{top_instances}"
+        else:
+            return f"LLM: {answer}\n\nError fetching AWS data: {error_message}"
+    else:
+        return f"LLM: {answer}"
+
+# Streamlit UI for chat interface
+st.title("Chat with LLM and Query AWS Cost Data")
+
+# AWS credentials input
+st.write("Please enter your AWS credentials:")
 aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
 aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-region_name = st.text_input("AWS Region (optional)", "us-east-1")
+region_name = st.text_input("AWS Region", "us-east-1")
+
+# Chatbox for LLM interaction
+st.write("Ask the LLM questions related to your AWS usage:")
+user_question = st.text_input("Your question")
 
 # Submit button
-if st.button("Get Top 5 RDS and EC2 Instances"):
-    if aws_access_key_id and aws_secret_access_key:
-        # Fetch AWS cost data
-        top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
-        if top_5_instances is not None:
-            st.success("Top 5 Instances Retrieved!")
-            
-            # Display the top 5 instances
-            st.write(top_5_instances)
-            
-            # Plot the top 5 instances with Matplotlib
-            plt.figure(figsize=(10, 6))
-            plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
-            plt.title('Top 5 RDS and EC2 Instances by On-Demand Cost')
-            plt.xlabel('Instance Type')
-            plt.ylabel('Cost ($)')
-            plt.xticks(rotation=45)
-            st.pyplot(plt)
-        else:
-            st.warning(message)
+if st.button("Ask"):
+    if aws_access_key_id and aws_secret_access_key and user_question:
+        llm_response = ask_llm(user_question, aws_access_key_id, aws_secret_access_key, region_name)
+        st.write(llm_response)
     else:
-        st.warning("Please provide both Access Key ID and Secret Access Key.")
+        st.warning("Please provide AWS credentials and ask a question.")
+
 
