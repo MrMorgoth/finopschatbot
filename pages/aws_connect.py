@@ -69,9 +69,13 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
 st.title('Top 5 RDS and EC2 Instances by On-Demand Expenditure')
 
 # Collect AWS credentials from the user
-aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
-aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-region_name = st.text_input("AWS Region (optional)", "us-east-1")
+aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+region_name = st.secrets["AWS_REGION_NAME"]
+
+#st.text_input("AWS Access Key ID", type="password")
+#aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
+#region_name = st.text_input("AWS Region (optional)", "us-east-1")
 
 # Submit button
 if st.button("Get Top 5 RDS and EC2 Instances"):
