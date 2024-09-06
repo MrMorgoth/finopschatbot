@@ -2,15 +2,14 @@ import streamlit as st
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from openai import OpenAI
-
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 import pandas as pd
 from datetime import datetime, timedelta
 
 # Initialize OpenAI API for LLM interaction
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# AWS Cost Explorer query function for detailed EC2 cost data
-def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
+# Connect to AWS Cost Explorer
+def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
     try:
         # Create a boto3 client for Cost Explorer
         client = boto3.client(
@@ -24,44 +23,44 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
         end_date = datetime.now().date()
         start_date = (end_date.replace(day=1) - timedelta(days=1)).replace(day=1)
 
-        # Query AWS Cost Explorer for detailed EC2 cost data (limit GroupBy to 2 dimensions)
+        # Query AWS Cost Explorer for RDS and EC2 On-Demand costs
         response = client.get_cost_and_usage(
             TimePeriod={
                 'Start': start_date.strftime('%Y-%m-%d'),
                 'End': end_date.strftime('%Y-%m-%d')
             },
-            Granularity='DAILY',  # Daily breakdown for detailed cost view
+            Granularity='MONTHLY',
             Metrics=['UnblendedCost'],
             GroupBy=[
-                {'Type': 'DIMENSION', 'Key': 'INSTANCE_TYPE'},
-                {'Type': 'DIMENSION', 'Key': 'REGION'}
+                {'Type': 'DIMENSION', 'Key': 'SERVICE'},
+                {'Type': 'DIMENSION', 'Key': 'INSTANCE_TYPE'}
             ],
             Filter={
                 'Dimensions': {
                     'Key': 'SERVICE',
-                    'Values': ['Amazon Elastic Compute Cloud - Compute']
+                    'Values': ['Amazon Relational Database Service', 'Amazon Elastic Compute Cloud - Compute']
                 }
             }
         )
 
-        # Check if the key 'ResultsByTime' exists in the response
-        if 'ResultsByTime' not in response:
-            return None, "The response does not contain 'ResultsByTime'."
+        # Check if there are any results
+        if not response['ResultsByTime'][0]['Groups']:
+            return None, "No costs or instances found for the specified time period."
 
-        # Parse the response if 'ResultsByTime' is available
+        # Parse the response to find top 5 RDS and EC2 instances by cost
         cost_data = []
-        for result in response['ResultsByTime']:
-            for group in result['Groups']:
-                instance_type = group['Keys'][0]  # First GroupBy: INSTANCE_TYPE
-                region = group['Keys'][1]         # Second GroupBy: REGION
-                amount = float(group['Metrics']['UnblendedCost']['Amount'])
-                date = result['TimePeriod']['Start']
-                cost_data.append([date, instance_type, region, amount])
+        for result in response['ResultsByTime'][0]['Groups']:
+            service = result['Keys'][0]
+            instance_type = result['Keys'][1]
+            amount = float(result['Metrics']['UnblendedCost']['Amount'])
+            cost_data.append([service, instance_type, amount])
 
-        # Return the data as a DataFrame and None for the error message
-        df = pd.DataFrame(cost_data, columns=['Date', 'Instance Type', 'Region', 'Cost'])
-        return df, None  # Always return two values
+        # Create a DataFrame and sort by cost
+        df = pd.DataFrame(cost_data, columns=['Service', 'Instance Type', 'Cost'])
+        top_5 = df.sort_values(by='Cost', ascending=False).head(5)
 
+        return top_5, None
+    
     except NoCredentialsError:
         return None, "No credentials provided."
     except PartialCredentialsError:
@@ -76,7 +75,7 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
         # If the user's question is related to AWS cost data (intercept)
         if "top instances by on-demand spend" in question.lower():
             service = "Amazon Elastic Compute Cloud - Compute"  # EC2 instance service
-            top_instances, error_message = get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
+            top_instances, error_message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             if top_instances is not None:
                 return f"Here are the top EC2 instances by On-Demand spend:\n{top_instances}"
             else:
