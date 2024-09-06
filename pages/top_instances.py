@@ -69,33 +69,33 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
 st.title('Top 5 RDS and EC2 Instances by On-Demand Expenditure')
 
 # Collect AWS credentials from the user
-aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
-aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
-region_name = st.secrets["AWS_REGION_NAME"]
+#aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+#aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+#region_name = st.secrets["AWS_REGION_NAME"]
 
-#st.text_input("AWS Access Key ID", type="password")
-#aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-#region_name = st.text_input("AWS Region (optional)", "eu-west-2")
+aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
+aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
+region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
 # Submit button
-#if st.button("Get Top 5 RDS and EC2 Instances"):
-if aws_access_key_id and aws_secret_access_key:
-    # Fetch AWS cost data
-    top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
-    if top_5_instances is not None:
-        #st.success("Top 5 Instances Retrieved!")
-        # Plot the top 5 instances with Matplotlib
-        plt.figure(figsize=(10, 6))
-        plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
-        plt.title('Top 5 RDS and EC2 Instances by On-Demand Cost')
-        plt.xlabel('Instance Type')
-        plt.ylabel('Cost ($)')
-        plt.xticks(rotation=45)
-        st.pyplot(plt)
+if st.button("Get Top 5 RDS and EC2 Instances"):
+    if aws_access_key_id and aws_secret_access_key:
+        # Fetch AWS cost data
+        top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
+        if top_5_instances is not None:
+            #st.success("Top 5 Instances Retrieved!")
+            # Plot the top 5 instances with Matplotlib
+            plt.figure(figsize=(10, 6))
+            plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
+            plt.title('Top 5 RDS and EC2 Instances by On-Demand Cost')
+            plt.xlabel('Instance Type')
+            plt.ylabel('Cost ($)')
+            plt.xticks(rotation=45)
+            st.pyplot(plt)
 
-        # Display the top 5 instances
-        st.write(top_5_instances)
+            # Display the top 5 instances
+            st.write(top_5_instances)
+        else:
+            st.warning(message)
     else:
-        st.warning(message)
-else:
-    st.warning("Please provide both Access Key ID and Secret Access Key.")
+        st.warning("Please provide both Access Key ID and Secret Access Key.")
