@@ -68,7 +68,7 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
 # Streamlit app interface
 st.title('Top 5 RDS and EC2 Instances by On-Demand Expenditure')
 st.write(
-    "Create a new IAM role with read permissions for the AWS Cost Explorer API. Provide the access keys below"
+    "Create a new IAM role with read permissions for the AWS Cost Explorer API. Provide the access keys below."
 )
 
 # Collect AWS credentials from the user

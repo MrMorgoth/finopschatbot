@@ -27,7 +27,7 @@ def calculate_optimal_reservation(data, discount_rate):
 st.title("Rate Reduction Genie")
 st.write(
     "Upload a file with 7-day hourly usage data by purchase option for a given instance type and the rate reduction genie will calculate the optimal amount of reservations to reduce total spend."
-    " AWS Pricing data for RDS instances can be found at https://aws.amazon.com/rds/pricing/"
+    " AWS Pricing data for RDS instances and reservation discounts can be found at https://aws.amazon.com/rds/pricing/"
 )
 
 # File upload
