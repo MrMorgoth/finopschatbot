@@ -1,5 +1,5 @@
 import boto3
-from llama_index.tools import FunctionTool
+from llama_index.core.tools import FunctionTool
 from datetime import datetime, timedelta
 
 class AWSQueryTool(FunctionTool):
