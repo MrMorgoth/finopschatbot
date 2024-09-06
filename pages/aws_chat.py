@@ -1,6 +1,6 @@
 import boto3
 from llama_index.core.tools import FunctionTool
-from llama_index.agent import OpenAIAgent
+from llama_index.agent.openai import OpenAIAgent
 from llama_index.core.tools import ToolSelection
 from datetime import datetime, timedelta
 
