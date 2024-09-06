@@ -1,5 +1,7 @@
 import boto3
 from llama_index.core.tools import FunctionTool
+from llama_index.agent import OpenAIAgent
+from llama_index.core.tools import ToolSelection
 from datetime import datetime, timedelta
 
 class AWSQueryTool(FunctionTool):
@@ -91,3 +93,24 @@ class AWSQueryTool(FunctionTool):
         This method is required by LlamaIndex to call the tool with user input.
         """
         return self.parse_query(input_text)
+
+
+# AWS credentials
+aws_access_key_id = 'your_access_key'
+aws_secret_access_key = 'your_secret_key'
+region_name = 'eu-west-2'
+
+# Instantiate the AWS Query Tool
+aws_tool = AWSQueryTool(aws_access_key_id, aws_secret_access_key, region_name)
+
+# Create a ToolSet for the agent
+tools = ToolSelection([aws_tool])
+
+# Instantiate the agent
+agent = OpenAIAgent(toolsets=tools)
+
+# Sample user query
+query = "What are the top instances by on-demand spend?"
+response = agent.chat(query)
+
+print(response)
