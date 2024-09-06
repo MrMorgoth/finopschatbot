@@ -93,7 +93,7 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
             return f"Error occurred while interacting with the LLM: {str(e)}"
 
 # Streamlit UI for chat interface
-st.title("Chat with LLM and Query AWS Cost Data")
+st.title("AI FinOps Analyst")
 
 # AWS credentials input
 # Collect AWS credentials from the user
