@@ -29,7 +29,7 @@ def load_data():
         Assume that all questions are related 
         to FinOps. Keep 
         your answers technical and based on 
-        facts – do not hallucinate features. Write in British English.""",
+        facts – do not hallucinate features. Write in British English. Use paragraphs and good sentence structure to make your output easy to read""",
     )
     index = VectorStoreIndex.from_documents(docs)
     return index
