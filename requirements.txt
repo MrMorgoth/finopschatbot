@@ -14,4 +14,3 @@ matplotlib
 openpyxl
 nltk
 boto3
-llama-index-tools
