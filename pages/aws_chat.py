@@ -1,8 +1,8 @@
 import boto3
-from llama_index.tools import Tool
+from llama_index.tools import FunctionTool
 from datetime import datetime, timedelta
 
-class AWSQueryTool(Tool):
+class AWSQueryTool(FunctionTool):
     """
     Custom tool to handle AWS Cost Explorer queries based on natural language input.
     """
