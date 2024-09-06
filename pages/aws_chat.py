@@ -94,10 +94,10 @@ def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
 st.title("Chat with LLM and Query AWS Cost Data")
 
 # AWS credentials input
-st.write("Please enter your AWS credentials:")
-aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
-aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-region_name = st.text_input("AWS Region", "us-east-1")
+# Collect AWS credentials from the user
+aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+region_name = st.secrets["AWS_REGION_NAME"]
 
 # Chatbox for LLM interaction
 st.write("Ask the LLM questions related to your AWS usage:")
