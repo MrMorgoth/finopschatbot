@@ -113,10 +113,10 @@ aws_tool = AWSQueryTool(aws_access_key_id, aws_secret_access_key, region_name)
 llm = OpenAI(model="gpt-3.5-turbo-0613")
 
 # Create a ToolSet for the agent
-tool_spec = aws_tool
+tools = aws_tool
 
 # Instantiate the agent
-agent = OpenAIAgent.from_tools(tool_spec.to_tool_list(), llm=llm, verbose=True)
+agent = OpenAIAgent.from_tools(tools, llm=llm, verbose=True)
 
 # Sample user query
 query = "What are the top instances by on-demand spend?"
