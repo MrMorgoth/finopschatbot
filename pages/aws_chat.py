@@ -24,7 +24,7 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
         end_date = datetime.now().date()
         start_date = (end_date.replace(day=1) - timedelta(days=1)).replace(day=1)
 
-        # Query AWS Cost Explorer for detailed EC2 cost data
+        # Query AWS Cost Explorer for detailed EC2 cost data (limit GroupBy to 2 dimensions)
         response = client.get_cost_and_usage(
             TimePeriod={
                 'Start': start_date.strftime('%Y-%m-%d'),
@@ -44,21 +44,23 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
             }
         )
 
-        # Parse the response
+        # Check if the key 'ResultsByTime' exists in the response
+        if 'ResultsByTime' not in response:
+            return None, "The response does not contain 'ResultsByTime'."
+
+        # Parse the response if 'ResultsByTime' is available
         cost_data = []
-        for result in response['ResultsByTime'][0]['Groups']:
+        for result in response['ResultsByTime']:
             for group in result['Groups']:
-                instance_type = group['Keys'][1]
-                region = group['Keys'][2]
-                usage_type = group['Keys'][3]
+                instance_type = group['Keys'][0]  # First GroupBy: INSTANCE_TYPE
+                region = group['Keys'][1]         # Second GroupBy: REGION
                 amount = float(group['Metrics']['UnblendedCost']['Amount'])
                 date = result['TimePeriod']['Start']
-                cost_data.append([date, instance_type, region, usage_type, amount])
-        
+                cost_data.append([date, instance_type, region, amount])
 
-        # Return the data as a DataFrame
-        df = pd.DataFrame(cost_data, columns=['Date', 'Instance Type', 'Region', 'Usage Type', 'Cost'])
-        return df
+        # Return the data as a DataFrame and None for the error message
+        df = pd.DataFrame(cost_data, columns=['Date', 'Instance Type', 'Region', 'Cost'])
+        return df, None  # Always return two values
 
     except NoCredentialsError:
         return None, "No credentials provided."
@@ -66,6 +68,7 @@ def get_detailed_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name
         return None, "Incomplete credentials provided."
     except Exception as e:
         return None, str(e)
+
 
 # LLM Interaction function (Updated for OpenAI API v1.0.0)
 def ask_llm(question, aws_access_key_id, aws_secret_access_key, region_name):
