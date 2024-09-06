@@ -75,7 +75,7 @@ region_name = st.secrets["AWS_REGION_NAME"]
 
 #st.text_input("AWS Access Key ID", type="password")
 #aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-region_name = st.text_input("AWS Region (optional)", "us-east-1")
+#region_name = st.text_input("AWS Region (optional)", "us-east-1")
 
 # Submit button
 #if st.button("Get Top 5 RDS and EC2 Instances"):
@@ -83,7 +83,7 @@ if aws_access_key_id and aws_secret_access_key:
     # Fetch AWS cost data
     top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
     if top_5_instances is not None:
-        st.success("Top 5 Instances Retrieved!")
+        #st.success("Top 5 Instances Retrieved!")
             
         # Display the top 5 instances
         st.write(top_5_instances)
