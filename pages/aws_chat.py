@@ -1,8 +1,10 @@
 import boto3
 from llama_index.core.tools import FunctionTool
 from llama_index.agent.openai import OpenAIAgent
+from llama_index.llms.openai import OpenAI
 from llama_index.core.tools import ToolSelection
 from datetime import datetime, timedelta
+import streamlit as st
 
 class AWSQueryTool(FunctionTool):
     """
@@ -103,14 +105,21 @@ region_name = 'eu-west-2'
 # Instantiate the AWS Query Tool
 aws_tool = AWSQueryTool(aws_access_key_id, aws_secret_access_key, region_name)
 
+#tool_spec = SlackToolSpec()
+# initialize openai agent
+#gent = OpenAIAgent.from_tools(tool_spec.to_tool_list(), llm=llm, verbose=True)
+
+
+llm = OpenAI(model="gpt-3.5-turbo-0613")
+
 # Create a ToolSet for the agent
-tools = ToolSelection([aws_tool])
+tool_spec = aws_tool
 
 # Instantiate the agent
-agent = OpenAIAgent(toolsets=tools)
+agent = OpenAIAgent.from_tools(tool_spec.to_tool_list(), llm=llm, verbose=True)
 
 # Sample user query
 query = "What are the top instances by on-demand spend?"
 response = agent.chat(query)
 
-print(response)
+st.info(response)
