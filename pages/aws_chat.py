@@ -102,7 +102,7 @@ aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
 region_name = st.secrets["AWS_REGION_NAME"]
 
 # Chatbox for LLM interaction
-st.write("Ask the LLM questions related to your AWS usage:")
+st.write("Ask the AI FinOps Analyst questions about your AWS costs.")
 user_question = st.text_input("Your question")
 
 # Submit button
