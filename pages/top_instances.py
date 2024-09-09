@@ -121,7 +121,7 @@ if st.button("Get Top Instances"):
             #st.success("Top 5 Instances Retrieved!")
             # Display the top 5 instances
             st.write(top_5_instances)
-            st.metric(label="Instance", value=top_5_instances['Instance Type'], delta=None)
+            st.metric(label="Instance", value="db.r5.2xlarge", delta=None)
 
             # Plot the top 5 instances with Matplotlib
             #plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
