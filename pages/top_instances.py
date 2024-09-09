@@ -118,17 +118,18 @@ if st.button("Get Top Instances"):
         top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
         if top_5_instances is not None:
             #st.success("Top 5 Instances Retrieved!")
-            # Plot the top 5 instances with Matplotlib
-            plt.figure(figsize=(10, 6))
-            plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
-            plt.title('Top 5 RDS and EC2 Instances by On-Demand Cost')
-            plt.xlabel('Instance Type')
-            plt.ylabel('Cost ($)')
-            plt.xticks(rotation=45)
-            st.pyplot(plt)
-
             # Display the top 5 instances
             st.write(top_5_instances)
+
+            # Plot the top 5 instances with Matplotlib
+            #plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
+            #plt.figure(figsize=(10, 6))
+            #plt.title('Top 5 RDS and EC2 Instances by On-Demand Cost')
+            #plt.xlabel('Instance Type')
+            #plt.ylabel('Cost ($)')
+            #plt.xticks(rotation=45)
+            #st.pyplot(plt)
+
         else:
             st.warning(message)
     else:
