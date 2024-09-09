@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+from streamlit_extras.metric_cards import style_metric_cards
 
 pricing_client = boto3.client('pricing', region_name='eu-west-2')
 
@@ -120,6 +121,7 @@ if st.button("Get Top Instances"):
             #st.success("Top 5 Instances Retrieved!")
             # Display the top 5 instances
             st.write(top_5_instances)
+            st.metric(label="Instance", value=top_5_instances['Instance Type'], delta=None)
 
             # Plot the top 5 instances with Matplotlib
             #plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
