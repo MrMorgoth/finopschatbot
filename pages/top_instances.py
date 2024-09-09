@@ -56,10 +56,10 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             instance_type = result['Keys'][1]
             amount = float(result['Metrics']['UnblendedCost']['Amount'])
             reserved_cost = get_reserved_instance_pricing(instance_type, 'eu-west-2')
-            percentage_saving = []
+            percentage_saving = 0
             if reserved_cost:
                 saving_perc=(amount-reserved_cost)/amount
-                percentage_saving.append(saving_perc)
+                percentage_saving = saving_perc
             cost_data.append([service, instance_type, amount, reserved_cost, percentage_saving])
 
         # Create a DataFrame and sort by cost
