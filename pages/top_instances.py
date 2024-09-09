@@ -5,10 +5,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
-
-
 pricing_client = boto3.client('pricing', region_name='eu-west-2')
-
 
 # Connect to AWS Cost Explorer
 def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
@@ -110,10 +107,6 @@ st.write(
 )
 
 # Collect AWS credentials from the user
-#aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
-#aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
-#region_name = st.secrets["AWS_REGION_NAME"]
-
 aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
 aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
 region_name = st.text_input("AWS Region (optional)", "eu-west-2")
