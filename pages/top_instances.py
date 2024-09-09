@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
+
+
+pricing_client = boto3.client('pricing', region_name='eu-west-2')
+
+
 # Connect to AWS Cost Explorer
 def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
     try:
@@ -50,11 +55,12 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             service = result['Keys'][0]
             instance_type = result['Keys'][1]
             amount = float(result['Metrics']['UnblendedCost']['Amount'])
-            cost_data.append([service, instance_type, amount])
+            reserved_cost = get_reserved_instance_pricing(instance_type, 'eu-west-2')
+            cost_data.append([service, instance_type, amount, reserved_cost])
 
         # Create a DataFrame and sort by cost
         df = pd.DataFrame(cost_data, columns=['Service', 'Instance Type', 'Cost'])
-        top_5 = df.sort_values(by='Cost', ascending=False).head(5)
+        top_5 = df.sort_values(by='Cost', ascending=False).head(10)
 
         return top_5, None
     
@@ -64,8 +70,36 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
         return None, "Incomplete credentials provided."
     except Exception as e:
         return None, str(e)
+    
+def get_reserved_instance_pricing(instance_type, region):
+    try:
+        response = pricing_client.get_products(
+            ServiceCode='AmazonEC2',
+            Filters=[
+                {'Type': 'TERM_MATCH', 'Field': 'instanceType', 'Value': instance_type},
+                {'Type': 'TERM_MATCH', 'Field': 'location', 'Value': region},
+                {'Type': 'TERM_MATCH', 'Field': 'termType', 'Value': 'Reserved'},
+                {'Type': 'TERM_MATCH', 'Field': 'tenancy', 'Value': 'Shared'},
+                {'Type': 'TERM_MATCH', 'Field': 'preInstalledSw', 'Value': 'NA'},
+                {'Type': 'TERM_MATCH', 'Field': 'capacitystatus', 'Value': 'Used'}
+            ],
+            MaxResults=1
+        )
+
+        # Extract the reserved instance price from the response
+        product = response['PriceList'][0]
+        product_data = eval(product)  # Convert JSON string to dictionary
+        price_dimensions = product_data['terms']['Reserved'].values()
+        for dimension in price_dimensions:
+            price_per_hour = dimension['priceDimensions'].values()[0]['pricePerUnit']['USD']
+            return float(price_per_hour)
+
+    except Exception as e:
+        print(f"Error fetching reserved pricing for {instance_type}: {e}")
+        return None
 
 # Streamlit app interface
+
 st.title('Top 5 RDS and EC2 Instances by On-Demand Expenditure')
 st.write(
     "Create a new IAM role with read permissions for the AWS Cost Explorer API. Provide the access keys below."
