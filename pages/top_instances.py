@@ -59,7 +59,7 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
             cost_data.append([service, instance_type, amount, reserved_cost])
 
         # Create a DataFrame and sort by cost
-        df = pd.DataFrame(cost_data, columns=['Service', 'Instance Type', 'Cost'])
+        df = pd.DataFrame(cost_data, columns=['Service', 'Instance Type', 'Cost', 'Reserved Cost'])
         top_5 = df.sort_values(by='Cost', ascending=False).head(10)
 
         return top_5, None
