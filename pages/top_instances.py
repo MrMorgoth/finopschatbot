@@ -44,6 +44,7 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
                 }
             }
         )
+        st.write(response)
 
         # Check if there are any results
         if not response['ResultsByTime'][0]['Groups']:
@@ -78,7 +79,7 @@ def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
 def get_reserved_instance_pricing(instance_type, region):
     try:
         response = pricing_client.get_products(
-            ServiceCode='AmazonEC2',
+            ServiceCode='AmazonRDS',
             Filters=[
                 {'Type': 'TERM_MATCH', 'Field': 'instanceType', 'Value': instance_type},
                 {'Type': 'TERM_MATCH', 'Field': 'location', 'Value': region},
