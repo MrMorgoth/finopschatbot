@@ -101,7 +101,7 @@ def get_reserved_instance_pricing(instance_type, region):
 
 # Streamlit app interface
 
-st.title('Top 5 RDS and EC2 Instances by On-Demand Expenditure')
+st.title('Top Instances by On-Demand Expenditure')
 st.write(
     "Create a new IAM role with read permissions for the AWS Cost Explorer API. Provide the access keys below."
 )
