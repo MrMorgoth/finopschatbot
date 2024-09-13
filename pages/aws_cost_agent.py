@@ -69,8 +69,8 @@ region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
 def run():
     ready = True
-    aws_access_key_id = st.session_state.get("AWS_ACCESS_KEY_ID")
-    aws_secret_access_key = st.session_state.get("AWS_SECRET_ACCESS_KEY")
+    aws_access_key_id = str
+    aws_secret_access_key = str
 
     if not aws_access_key_id and aws_secret_access_key:
         # Collect AWS credentials from the user
