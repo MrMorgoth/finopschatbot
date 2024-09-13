@@ -8,6 +8,12 @@ openai_api_key = st.secrets["OPENAI_API_KEY"]
 st.set_page_config(page_title="AWS FinOps Agent", page_icon="", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with your AWS Cost Data 💬")
 
+# Collect AWS credentials from the user
+aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
+aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
+region_name = st.text_input("AWS Region (optional)", "eu-west-2")
+
+
 if "messages" not in st.session_state.keys():  # Initialise the chat messages history
     st.session_state.messages = [
         {
