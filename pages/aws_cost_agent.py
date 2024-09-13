@@ -35,33 +35,37 @@ def load_data():
 
 index = load_data()
 
-if "messages" not in st.session_state.keys():  # Initialise the chat messages history
-    st.session_state.messages = [
-        {
-            "role": "assistant",
-            "content": "Ask me a question about your AWS Cost Data",
-        }
-    ]
+def chat_interface():
+    if "messages" not in st.session_state.keys():  # Initialise the chat messages history
+        st.session_state.messages = [
+            {
+                "role": "assistant",
+                "content": "Ask me a question about your AWS Cost Data",
+            }
+        ]
 
-if "chat_engine" not in st.session_state.keys():  # Initialise the chat engine
-    st.session_state.chat_engine = index.as_chat_engine(
-        chat_mode="condense_question", verbose=True, streaming=True
-    )
+    if "chat_engine" not in st.session_state.keys():  # Initialise the chat engine
+        st.session_state.chat_engine = index.as_chat_engine(
+            chat_mode="condense_question", verbose=True, streaming=True
+        )
 
-if prompt := st.chat_input(
-    "Ask a question"
-):  # Prompt for user input and save to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    if prompt := st.chat_input(
+        "Ask a question"
+    ):  # Prompt for user input and save to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
 
-for message in st.session_state.messages:  # Write message history to UI
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+    for message in st.session_state.messages:  # Write message history to UI
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
 
-# If last message is not from assistant, generate a new response
-if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        response_stream = st.session_state.chat_engine.stream_chat(prompt)
-        st.write_stream(response_stream.response_gen)
-        message = {"role": "assistant", "content": response_stream.response}
-        # Add response to message history
-        st.session_state.messages.append(message)
+    # If last message is not from assistant, generate a new response
+    if st.session_state.messages[-1]["role"] != "assistant":
+        with st.chat_message("assistant"):
+            response_stream = st.session_state.chat_engine.stream_chat(prompt)
+            st.write_stream(response_stream.response_gen)
+            message = {"role": "assistant", "content": response_stream.response}
+            # Add response to message history
+            st.session_state.messages.append(message)
+
+if aws_access_key_id and aws_access_key_id:
+    chat_interface()
