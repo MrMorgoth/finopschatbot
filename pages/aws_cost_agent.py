@@ -69,7 +69,7 @@ aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
 region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
 # Submit button
-with st.button("Connect to AWS"):
+if st.button("Connect to AWS"):
     if aws_access_key_id and aws_secret_access_key:
         chat_interface()
     else:
