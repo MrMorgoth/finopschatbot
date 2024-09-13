@@ -63,20 +63,10 @@ def chat_interface():
             st.session_state.messages.append(message)
 
 
-def run():
-    ready = False
-    aws_access_key_id = st.session_state.get("AWS_ACCESS_KEY_ID")
-    aws_secret_access_key = st.session_state.get("AWS_SECRET_ACCESS_KEY")
-    
-    if not aws_access_key_id and aws_secret_access_key:
-        # Collect AWS credentials from the user
-        aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
-        aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-        region_name = st.text_input("AWS Region (optional)", "eu-west-2")
+aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
+aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
+region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
-        if aws_access_key_id and aws_secret_access_key:
-            ready = True
 
-    if ready:
-        chat_interface()
-run()
+if aws_access_key_id and aws_secret_access_key:
+    chat_interface()
