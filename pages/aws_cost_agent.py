@@ -73,10 +73,9 @@ def run():
         aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
         aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
         region_name = st.text_input("AWS Region (optional)", "eu-west-2")
-        ready = False
 
-    if aws_access_key_id and aws_secret_access_key:
-        ready = True
+        if aws_access_key_id and aws_secret_access_key:
+            ready = True
 
     if ready:
         chat_interface()
