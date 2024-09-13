@@ -67,5 +67,5 @@ def chat_interface():
             # Add response to message history
             st.session_state.messages.append(message)
 
-if aws_access_key_id and aws_access_key_id:
+if aws_access_key_id and aws_secret_access_key:
     chat_interface()
