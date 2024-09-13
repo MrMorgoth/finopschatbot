@@ -63,12 +63,13 @@ def chat_interface():
             st.session_state.messages.append(message)
 
 
+
 aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
 aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
 region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
 # Submit button
-if st.button("Connect AWS"):
+with st.button("Connect to AWS"):
     if aws_access_key_id and aws_secret_access_key:
         chat_interface()
     else:
