@@ -14,14 +14,6 @@ aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
 region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
 
-if "messages" not in st.session_state.keys():  # Initialise the chat messages history
-    st.session_state.messages = [
-        {
-            "role": "assistant",
-            "content": "Ask me a question about your AWS Cost Data",
-        }
-    ]
-
 @st.cache_resource(show_spinner=False)
 def load_data():
     reader = SimpleDirectoryReader(input_dir="pages/data", recursive=True)
@@ -42,6 +34,14 @@ def load_data():
 
 
 index = load_data()
+
+if "messages" not in st.session_state.keys():  # Initialise the chat messages history
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": "Ask me a question about your AWS Cost Data",
+        }
+    ]
 
 if "chat_engine" not in st.session_state.keys():  # Initialise the chat engine
     st.session_state.chat_engine = index.as_chat_engine(
