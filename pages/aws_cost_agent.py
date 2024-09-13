@@ -64,7 +64,7 @@ def chat_interface():
 
 
 def run():
-    ready = True
+    ready = False
     aws_access_key_id = st.session_state.get("AWS_ACCESS_KEY_ID")
     aws_secret_access_key = st.session_state.get("AWS_SECRET_ACCESS_KEY")
 
