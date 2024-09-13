@@ -62,10 +62,6 @@ def chat_interface():
             # Add response to message history
             st.session_state.messages.append(message)
 
-# Collect AWS credentials from the user
-aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
-aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
 def run():
     ready = True
