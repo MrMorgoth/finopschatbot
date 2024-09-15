@@ -18,7 +18,12 @@ cloudwatch_client = boto3.client(
     aws_access_key_id=aws_access_key_id,
     aws_secret_access_key=aws_secret_access_key,
     region_name=region_name)
-sns_client = boto3.client('sns')  # Or ses_client if using SES
+sns_client = boto3.client(
+    'sns',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    region_name=region_name
+    )  # Or ses_client if using SES
 
 
 # Function to find inactive RDS instances
