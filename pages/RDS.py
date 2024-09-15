@@ -2,9 +2,22 @@ import boto3
 import streamlit as st
 from datetime import datetime, timedelta, timezone
 
+# Collect AWS credentials from the user
+aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
+aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
+region_name = st.text_input("AWS Region (optional)", "eu-west-2")
+
 # Initialise boto3 clients
-rds_client = boto3.client('rds')
-cloudwatch_client = boto3.client('cloudwatch')
+rds_client = boto3.client(
+    'rds',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    region_name=region_name)
+cloudwatch_client = boto3.client(
+    'cloudwatch',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    region_name=region_name)
 
 # Function to find inactive RDS instances
 def find_inactive_rds_instances():
