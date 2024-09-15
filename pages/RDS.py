@@ -18,6 +18,8 @@ cloudwatch_client = boto3.client(
     aws_access_key_id=aws_access_key_id,
     aws_secret_access_key=aws_secret_access_key,
     region_name=region_name)
+sns_client = boto3.client('sns')  # Or ses_client if using SES
+
 
 # Function to find inactive RDS instances
 def find_inactive_rds_instances():
@@ -31,6 +33,7 @@ def find_inactive_rds_instances():
     
     for instance in rds_instances['DBInstances']:
         db_instance_id = instance['DBInstanceIdentifier']
+        master_username = instance['MasterUsername']
         
         # Get CloudWatch metrics for the DB instance
         response = cloudwatch_client.get_metric_statistics(
@@ -53,9 +56,39 @@ def find_inactive_rds_instances():
         
         # If there are no connections, add to inactive instances list
         if total_connections == 0:
-            inactive_instances.append(db_instance_id)
+            inactive_instances.append((db_instance_id, master_username))
     
     return inactive_instances
+
+# Function to notify the DB creator
+def notify_db_creator(db_instance_id, master_username, notification_email):
+    # Message to notify the user of the impending deletion
+    subject = f"RDS Instance {db_instance_id} Scheduled for Deletion"
+    message = f"""
+    Dear {master_username},
+
+    Your RDS instance '{db_instance_id}' has not had any connections in the past 30 days.
+    It is scheduled for deletion in 7 days unless it is accessed.
+
+    If you wish to keep this instance, please ensure it is used before the deletion date.
+    """
+    
+    # Use SNS to send the notification (alternatively, use SES if desired)
+    sns_client.publish(
+        TopicArn='arn:aws:sns:your-topic-arn',  # Replace with your SNS topic ARN
+        Message=message,
+        Subject=subject
+    )
+
+    # Alternatively, if using SES:
+    # ses_client.send_email(
+    #     Source='your-email@example.com',  # Replace with your SES verified email
+    #     Destination={'ToAddresses': [notification_email]},
+    #     Message={
+    #         'Subject': {'Data': subject},
+    #         'Body': {'Text': {'Data': message}}
+    #     }
+    # )
 
 # Streamlit UI
 st.title('Inactive RDS Instances Finder')
@@ -67,6 +100,21 @@ if st.button('Find Inactive RDS Instances'):
     
     if inactive_instances:
         st.success(f'Found {len(inactive_instances)} inactive instances:')
-        st.write(inactive_instances)
+        for db_instance_id, master_username in inactive_instances:
+            st.write(f"DB Instance: {db_instance_id}, Master Username: {master_username}")
+            
+            # Fetch the notification email from tags or provide manually
+            # For demo purposes, assume email is stored in tags (replace with real logic)
+            db_tags = rds_client.list_tags_for_resource(ResourceName=f'arn:aws:rds:region:account-id:db:{db_instance_id}')
+            notification_email = None
+            for tag in db_tags['TagList']:
+                if tag['Key'] == 'CreatorEmail':
+                    notification_email = tag['Value']
+            
+            if notification_email:
+                notify_db_creator(db_instance_id, master_username, notification_email)
+                st.write(f'Notification sent to {notification_email}')
+            else:
+                st.write(f'No notification email found for {db_instance_id}')
     else:
         st.info('No inactive instances found.')
