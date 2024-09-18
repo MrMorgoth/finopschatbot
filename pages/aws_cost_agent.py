@@ -86,8 +86,6 @@ agent = ReActAgent.from_tools([aws_top_instances_tool], llm=llm, verbose=True)
 st.set_page_config(page_title="AWS FinOps Agent", page_icon="", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with your AWS Cost Data 💬")
 
-
-
 def chat_interface():
     if "messages" not in st.session_state.keys():  # Initialise the chat messages history
         st.session_state.messages = [
@@ -110,11 +108,9 @@ def chat_interface():
         with st.chat_message("assistant"):
             response_stream = agent.chat(prompt)
             st.write_stream(response_stream.response_gen)
-            message = {"role": "assistant", "content": response_stream.response}
+            message = {"role": "assistant", "content": response_stream}
             # Add response to message history
             st.session_state.messages.append(message)
-
-
 
 
 
