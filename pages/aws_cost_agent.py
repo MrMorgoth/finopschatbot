@@ -115,4 +115,4 @@ def chat_interface():
             # Add response to message history
             st.session_state.messages.append(message)
 
-chat_interface()
+#chat_interface()
