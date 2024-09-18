@@ -19,7 +19,7 @@ region_name = st.secrets["REGION_NAME"]
 
 def get_top_rds_ec2_costs(**kwargs):
     """Search AWS account for top RDS and EC2 instances by cost and returns dataframe of top instances"""
-    print(**kwargs)
+    print(f'{kwargs}')
     try:
         # Create a boto3 client for Cost Explorer
         client = boto3.client(
