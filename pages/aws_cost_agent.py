@@ -115,4 +115,5 @@ def chat_interface():
 chat_interface()
 
 if st.button("Get top instances"):
-    get_top_rds_ec2_costs()
+    output = get_top_rds_ec2_costs()
+    st.write(output)
