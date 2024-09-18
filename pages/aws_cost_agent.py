@@ -107,7 +107,7 @@ def chat_interface():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             response_stream = agent.chat(prompt)
-            st.write_stream(response_stream)
+            st.write_stream(response_stream["response"])
             message = {"role": "assistant", "content": response_stream}
             # Add response to message history
             st.session_state.messages.append(message)
