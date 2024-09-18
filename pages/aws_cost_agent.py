@@ -108,6 +108,7 @@ def chat_interface():
         with st.chat_message("assistant"):
             response_stream = agent.chat(prompt)
             print(response_stream)
+            response = response_stream["response"]
             st.write(response_stream)
             message = {"role": "assistant", "content": response_stream}
             # Add response to message history
