@@ -106,9 +106,8 @@ def chat_interface():
     # If last message is not from assistant, generate a new response
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
-            response = agent.chat(prompt)
-            response_stream = response["output"]
-            st.write_stream(response_stream)
+            response_stream = agent.chat(prompt)
+            st.write(response_stream)
             message = {"role": "assistant", "content": response_stream}
             # Add response to message history
             st.session_state.messages.append(message)
