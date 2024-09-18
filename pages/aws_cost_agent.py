@@ -113,3 +113,6 @@ def chat_interface():
             st.session_state.messages.append(message)
 
 chat_interface()
+
+with st.button("Get top instances"):
+    get_top_rds_ec2_costs()
