@@ -81,7 +81,7 @@ aws_top_instances_tool = FunctionTool.from_defaults(fn=get_top_rds_ec2_costs)
 
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 llm = OpenAI(model="gpt-3.5-turbo", temperature=0)
-agent = ReActAgent.from_tools([aws_top_instances_tool], llm=llm, verbose=False)
+agent = ReActAgent.from_tools([aws_top_instances_tool], llm=llm, verbose=True)
 
 
 def chat_interface():
