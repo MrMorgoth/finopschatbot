@@ -23,8 +23,8 @@ def get_top_rds_ec2_costs():
         # Create a boto3 client for Cost Explorer
         client = boto3.client(
             'ce',
-            aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
-            aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+            aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"],
+            aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"],
             region_name = st.secrets["REGION_NAME"]
         )
 
