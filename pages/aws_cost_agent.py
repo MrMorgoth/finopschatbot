@@ -13,9 +13,9 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 #aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
 #region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
-aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
-aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
-region_name = st.secrets["REGION_NAME"]
+#aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+#aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+#region_name = st.secrets["REGION_NAME"]
 
 def get_top_rds_ec2_costs():
     """Search AWS account for top RDS and EC2 instances by cost and returns dataframe of top 10 instances"""
@@ -23,9 +23,9 @@ def get_top_rds_ec2_costs():
         # Create a boto3 client for Cost Explorer
         client = boto3.client(
             'ce',
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-            region_name=region_name
+            aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+            aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+            region_name = st.secrets["REGION_NAME"]
         )
 
         # Define the time period for the past month
