@@ -17,7 +17,7 @@ aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
 aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
 region_name = st.secrets["REGION_NAME"]
 
-def get_top_rds_ec2_costs():
+def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
     """Search AWS account for top RDS and EC2 instances by cost and returns dataframe of top 10 instances"""
     try:
         # Create a boto3 client for Cost Explorer
