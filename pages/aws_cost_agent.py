@@ -13,10 +13,7 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 #aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
 #region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
-# Collect AWS credentials from the user
-aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
-aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
-region_name = st.text_input("AWS Region (optional)", "eu-west-2")
+
 
 def get_top_rds_ec2_costs():
     """Search AWS account for top RDS and EC2 instances by cost and returns dataframe of top 10 instances"""
@@ -86,6 +83,11 @@ agent = ReActAgent.from_tools([aws_top_instances_tool], llm=llm, verbose=True)
 
 st.set_page_config(page_title="AWS FinOps Agent", page_icon="", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with your AWS Cost Data 💬")
+
+# Collect AWS credentials from the user
+aws_access_key_id = st.text_input("AWS Access Key ID", type="password")
+aws_secret_access_key = st.text_input("AWS Secret Access Key", type="password")
+region_name = st.text_input("AWS Region (optional)", "eu-west-2")
 
 def chat_interface():
     if "messages" not in st.session_state.keys():  # Initialise the chat messages history
