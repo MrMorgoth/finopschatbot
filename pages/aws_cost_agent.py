@@ -111,13 +111,3 @@ def chat_interface():
             message = {"role": "assistant", "content": response_stream}
             # Add response to message history
             st.session_state.messages.append(message)
-
-
-
-# Submit button
-if st.button("Connect to AWS"):
-    if aws_access_key_id and aws_secret_access_key:
-        chat_interface()
-    else:
-        st.warning("Please provide both Access Key ID and Secret Access Key.")
-
