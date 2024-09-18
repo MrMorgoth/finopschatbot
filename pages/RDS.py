@@ -18,8 +18,8 @@ cloudwatch_client = boto3.client(
     aws_access_key_id=aws_access_key_id,
     aws_secret_access_key=aws_secret_access_key,
     region_name=region_name)
-sns_client = boto3.client(
-    'sns',
+ses_client = boto3.client(
+    'ses',
     aws_access_key_id=aws_access_key_id,
     aws_secret_access_key=aws_secret_access_key,
     region_name=region_name
@@ -65,6 +65,20 @@ def find_inactive_rds_instances():
     
     return inactive_instances
 
+# Function to tag the instance for deletion
+def tag_instance_for_deletion(db_instance_id):
+    # Tag the instance as "for_deletion"
+    rds_client.add_tags_to_resource(
+        ResourceName=f'arn:aws:rds:region:account-id:db:{db_instance_id}',  # Replace with actual region/account
+        Tags=[
+            {
+                'Key': 'for_deletion',
+                'Value': 'true'
+            }
+        ]
+    )
+    print(f"Instance {db_instance_id} tagged for deletion.")
+    
 # Function to notify the DB creator
 def notify_db_creator(db_instance_id, master_username, notification_email):
     # Message to notify the user of the impending deletion
@@ -73,27 +87,20 @@ def notify_db_creator(db_instance_id, master_username, notification_email):
     Dear {master_username},
 
     Your RDS instance '{db_instance_id}' has not had any connections in the past 30 days.
-    It is scheduled for deletion in 7 days unless it is accessed.
+    It is has been tagged and scheduled for deletion in 7 days unless you remove the tag.
 
-    If you wish to keep this instance, please ensure it is used before the deletion date.
+    If you wish to keep this instance, please ensure the tag is removed before the deletion date.
     """
-    
-    # Use SNS to send the notification (alternatively, use SES if desired)
-    sns_client.publish(
-        TopicArn='arn:aws:sns:your-topic-arn',  # Replace with your SNS topic ARN
-        Message=message,
-        Subject=subject
-    )
 
     # Alternatively, if using SES:
-    # ses_client.send_email(
-    #     Source='your-email@example.com',  # Replace with your SES verified email
-    #     Destination={'ToAddresses': [notification_email]},
-    #     Message={
-    #         'Subject': {'Data': subject},
-    #         'Body': {'Text': {'Data': message}}
-    #     }
-    # )
+    ses_client.send_email(
+        Source='your-email@example.com',  # Replace with an SES verified email.
+        Destination={'ToAddresses': [notification_email]},
+        Message={
+        'Subject': {'Data': subject},
+        'Body': {'Text': {'Data': message}}
+        }
+    )
 
 # Streamlit UI
 st.title('Inactive RDS Instances Finder')
