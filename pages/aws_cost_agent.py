@@ -111,3 +111,5 @@ def chat_interface():
             message = {"role": "assistant", "content": response_stream}
             # Add response to message history
             st.session_state.messages.append(message)
+
+chat_interface()
