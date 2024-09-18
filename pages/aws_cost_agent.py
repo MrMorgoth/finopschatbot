@@ -17,7 +17,7 @@ aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
 aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
 region_name = st.secrets["REGION_NAME"]
 
-def get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name):
+def get_top_rds_ec2_costs():
     """Search AWS account for top RDS and EC2 instances by cost and returns dataframe of top 10 instances"""
     try:
         # Create a boto3 client for Cost Explorer
@@ -107,7 +107,6 @@ def chat_interface():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             response_stream = agent.chat(prompt)
-
             st.write(response_stream)
             message = {"role": "assistant", "content": response_stream}
             # Add response to message history
