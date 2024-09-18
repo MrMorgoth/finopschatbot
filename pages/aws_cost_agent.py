@@ -105,7 +105,7 @@ def chat_interface():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             response_stream = agent.chat(prompt)
-            st.write(response_stream)
+            st.write(response_stream.sources)
             # below will return only the response, switch to this when bugs resolved.
             #st.write(response_stream.response)
             message = {"role": "assistant", "content": response_stream}
