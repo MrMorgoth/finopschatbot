@@ -104,7 +104,7 @@ def get_reserved_instance_pricing(instance_type, region):
 st.set_page_config(page_title="Rate Reduction Genie", page_icon="🧞‍♂️", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title('Top Instances by On-Demand Expenditure')
 st.write(
-    "Create a new IAM role with read permissions for the AWS Cost Explorer API. Provide the access keys below."
+    "Below the top instances in your AWS account are listed."
 )
 
 # Collect AWS credentials from the user
