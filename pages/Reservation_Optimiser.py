@@ -110,5 +110,5 @@ st.write(
     "Below are the top instances by On-Demand spend along with possible savings to be realised."
 )
 top_instances = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
-c= st.container()
-c.table(top_instances)
+#c = st.container()
+st.write(top_instances)
