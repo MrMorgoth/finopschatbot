@@ -109,6 +109,6 @@ st.title('Top Instances by On-Demand Expenditure')
 st.write(
     "Below are the top instances by On-Demand spend along with possible savings to be realised."
 )
-top_instances = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
-#c = st.container()
-st.write(top_instances)
+top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
+if top_5_instances is not None:
+    st.write(top_5_instances)
