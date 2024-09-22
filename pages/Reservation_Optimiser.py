@@ -111,4 +111,4 @@ st.write(
 )
 top_instances = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
 c= st.container()
-c.write(top_instances)
+c.table(top_instances)
