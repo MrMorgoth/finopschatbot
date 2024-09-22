@@ -108,3 +108,6 @@ st.title('Top Instances by On-Demand Expenditure')
 st.write(
     "Below are the top instances by On-Demand spend along with possible savings to be realised."
 )
+
+c= st.container()
+c.write("Example container")
