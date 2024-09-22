@@ -118,8 +118,8 @@ if aws_access_key_id and aws_secret_access_key:
     top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
     if top_5_instances is not None:
         # Display the top 5 instances
-        for instance in top_5_instances:
-            tile = instance.container(height=120)
+        for row in top_5_instances:
+            tile = row.container(height=120)
             tile.title(":balloon:")
 #        st.write(top_5_instances)
 
