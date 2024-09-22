@@ -119,8 +119,10 @@ if aws_access_key_id and aws_secret_access_key:
     if top_5_instances is not None:
         # Display the top 5 instances
         for row in top_5_instances:
-            tile = row.container(height=120)
-            tile.title(":balloon:")
+            c = st.container()
+            c.write(row["Service"])
+            c.write(row["Instance Type"])
+            
 #        st.write(top_5_instances)
 
             # Plot the top 5 instances with Matplotlib
