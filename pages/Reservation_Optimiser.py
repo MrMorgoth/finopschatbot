@@ -2,6 +2,7 @@ import boto3
 import streamlit as st
 from datetime import datetime, timedelta, timezone
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+import pandas as pd
 
 # Collect AWS credentials from the user
 aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
@@ -108,6 +109,6 @@ st.title('Top Instances by On-Demand Expenditure')
 st.write(
     "Below are the top instances by On-Demand spend along with possible savings to be realised."
 )
-
+top_instances = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
 c= st.container()
-c.write("Example container")
+c.write(top_instances)
