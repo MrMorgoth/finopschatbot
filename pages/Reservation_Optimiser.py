@@ -1,13 +1,10 @@
-import boto3
 import streamlit as st
-from datetime import datetime, timedelta, timezone
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+import boto3
 import pandas as pd
-
-# Collect AWS credentials from the user
-aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
-aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
-region_name = st.secrets["REGION_NAME"]
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+from streamlit_extras.metric_cards import style_metric_cards
 
 pricing_client = boto3.client('pricing', region_name='eu-west-2')
 
@@ -107,8 +104,35 @@ def get_reserved_instance_pricing(instance_type, region):
 st.set_page_config(page_title="Rate Reduction Genie", page_icon="🧞‍♂️", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title('Top Instances by On-Demand Expenditure')
 st.write(
-    "Below are the top instances by On-Demand spend along with possible savings to be realised."
+    "Create a new IAM role with read permissions for the AWS Cost Explorer API. Provide the access keys below."
 )
-top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
-if top_5_instances is not None:
-    st.write(top_5_instances)
+
+# Collect AWS credentials from the user
+aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+region_name = st.secrets["REGION_NAME"]
+
+# Submit button
+if st.button("Get Top Instances"):
+    if aws_access_key_id and aws_secret_access_key:
+        # Fetch AWS cost data
+        top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
+        if top_5_instances is not None:
+            #st.success("Top 5 Instances Retrieved!")
+            # Display the top 5 instances
+            st.write(top_5_instances)
+            st.metric(label="Instance", value="db.r5.2xlarge", delta=None)
+
+            # Plot the top 5 instances with Matplotlib
+            #plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
+            #plt.figure(figsize=(10, 6))
+            #plt.title('Top 5 RDS and EC2 Instances by On-Demand Cost')
+            #plt.xlabel('Instance Type')
+            #plt.ylabel('Cost ($)')
+            #plt.xticks(rotation=45)
+            #st.pyplot(plt)
+
+        else:
+            st.warning(message)
+    else:
+        st.warning("Please provide both Access Key ID and Secret Access Key.")
