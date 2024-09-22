@@ -113,15 +113,12 @@ aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
 region_name = st.secrets["REGION_NAME"]
 
 # Submit button
-if st.button("Get Top Instances"):
-    if aws_access_key_id and aws_secret_access_key:
-        # Fetch AWS cost data
-        top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
-        if top_5_instances is not None:
-            #st.success("Top 5 Instances Retrieved!")
-            # Display the top 5 instances
-            st.write(top_5_instances)
-            st.metric(label="Instance", value="db.r5.2xlarge", delta=None)
+if aws_access_key_id and aws_secret_access_key:
+    # Fetch AWS cost data
+    top_5_instances, message = get_top_rds_ec2_costs(aws_access_key_id, aws_secret_access_key, region_name)
+    if top_5_instances is not None:
+        # Display the top 5 instances
+        st.write(top_5_instances)
 
             # Plot the top 5 instances with Matplotlib
             #plt.bar(top_5_instances['Instance Type'], top_5_instances['Cost'], color='skyblue')
@@ -132,7 +129,7 @@ if st.button("Get Top Instances"):
             #plt.xticks(rotation=45)
             #st.pyplot(plt)
 
-        else:
-            st.warning(message)
     else:
-        st.warning("Please provide both Access Key ID and Secret Access Key.")
+        st.warning(message)
+else:
+    st.warning("Please provide both Access Key ID and Secret Access Key.")
